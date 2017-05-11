@@ -216,7 +216,9 @@ class ClassFuncoes {
        echo "</div>";
     }
     
-    
+    function refresh($tempo=0){
+        echo "<meta http-equiv='refresh' content='{$tempo}'>";
+    }
  }
 
  
