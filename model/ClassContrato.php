@@ -4,11 +4,13 @@
       class ClassContrato extends ClassConexao 
       {
 	    
-	function CadastrarContrato($alunoID,$servicoID,$dataVencimento,$cpf,$academiaID){
+	function CadastrarContrato($alunoID,$servicoID,$dataVencimento,$cpf,$academiaID,$seg,$ter,$qua,$qui,$sex,$sab,$hor,$ob){
 		   
                    $funcao = new ClassFuncoes();
                    $pagamento = new ClassPagamentos();
                    $classServico=new ClassServico();
+                   $classAula= new ClassAulas();
+                   $classEmail= new ClassEmail();
                    
                    if($alunoID=="")
                   {
@@ -32,7 +34,7 @@
                        $codigo = $funcao->GerarCodigo($alunoID,$cpf,$data);
                        
 		       $agora = date("Y-m-d H:i:s");    
-	               $sql = "INSERT INTO contrato(COD_CONTRATO,ID_ALUNO,ID_ACADEMIA,ID_SERVICO,STATUS,DATA_VENC,ATUALIZACAO) VALUES ('".$codigo."','".$alunoID."','".$academiaID."','".$servicoID."',1,'".$dataVencimento."','".$agora."')";
+	               $sql = "INSERT INTO contrato(COD_CONTRATO,ID_ALUNO,ID_ACADEMIA,ID_SERVICO,STATUS,DATA_VENC,ATUALIZACAO,OBSERVACAO) VALUES ('".$codigo."','".$alunoID."','".$academiaID."','".$servicoID."',1,'".$dataVencimento."','".$agora."','".$ob."')";
 			 
 			 $result = $this->conexao->query($sql);
 			 
@@ -46,7 +48,9 @@
                             $tipo=$classServico->getTipoServico($servicoID);
                             
                             $pagamento->gerarPagamento($codigo,$data, $dataVencimento, $tipo, $servicoID,1);
+                            $classAula->insert_Aulas($codigo,$seg, $ter, $qua, $qui, $sex, $sab, $hor);
                             
+                            $classEmail->emailContrato($codigo);
 		            $funcao->msg('ok','Cadastrado com sussesso');
 			 }
                        }
@@ -87,7 +91,7 @@
                 $inicio = ($registros*$pagina)-$registros;
                 
                  //seleciona os itens por página
-                $SQL ="SELECT  aluno.ID_ALUNO,contrato.STATUS,academia.BAIRRO,contrato.COD_CONTRATO,academia.NOME AS ACADEMIA,aluno.NOME,aluno.CPF,servico.TIPO,servico.DESCRICAO,servico.VALOR FROM academia,servico,aluno,contrato where (aluno.ID_ALUNO=contrato.ID_ALUNO and servico.ID_SERVICO=contrato.ID_SERVICO and academia.ID_ACADEMIA=contrato.ID_ACADEMIA) and (aluno.NOME LIKE '%".$consulta."%' or aluno.CPF LIKE '%".$consulta."%' or servico.DESCRICAO LIKE '%".$consulta."%' or servico.TIPO LIKE '%".$consulta."%' or academia.BAIRRO LIKE '%".$consulta."%' or academia.NOME LIKE '%".$consulta."%') limit ".$inicio.",".$registros."";
+                $SQL ="SELECT contrato.ACEITO, aluno.ID_ALUNO,contrato.STATUS,academia.BAIRRO,contrato.COD_CONTRATO,academia.NOME AS ACADEMIA,aluno.NOME,aluno.CPF,servico.TIPO,servico.DESCRICAO,servico.VALOR FROM academia,servico,aluno,contrato where (aluno.ID_ALUNO=contrato.ID_ALUNO and servico.ID_SERVICO=contrato.ID_SERVICO and academia.ID_ACADEMIA=contrato.ID_ACADEMIA) and (aluno.NOME LIKE '%".$consulta."%' or aluno.CPF LIKE '%".$consulta."%' or servico.DESCRICAO LIKE '%".$consulta."%' or servico.TIPO LIKE '%".$consulta."%' or academia.BAIRRO LIKE '%".$consulta."%' or academia.NOME LIKE '%".$consulta."%') limit ".$inicio.",".$registros."";
                 $result = $this->conexao->query($SQL);
                 if(!$result)
                    $funcao->msg('error',$this->conexao->error);
@@ -96,7 +100,7 @@
               
                  
                     
-                    
+                    $classAula= new ClassAulas();
                     
                      while($row = $result->fetch_assoc())
                      {    /*var_dump($row);*/
@@ -111,9 +115,17 @@
                          echo"<b> VALOR:</b> ".$row['VALOR'];
                          
                         echo "<br>  <a href='?pagina=historico-pagamento&id=".$row['COD_CONTRATO']."' class='btn btn-warning'>Histórico/Pagamento</a> ";
+                         echo "<a href='?pagina=atualizar-data-aula&id=".$row['COD_CONTRATO']."' class='btn btn-primary'>Aulas</a> ";
+                         if($row['ACEITO']==0)
+                         {
                           
+                         echo "<a href='#' class='btn btn-danger'>Contrato pendente</a> ";
+                         
+                         } else
+                             
+                          echo "<a href='/academia/?pagina=contrato-aluno&cod_contrato=".$row['COD_CONTRATO']."' target='_blank' class='btn btn-success'>Contrato aceito</a> ";    
                           //não haverá necessida de redirecionar para pagina de atualização de contrato
-                         // echo "<a href='?pagina=atualizar-contrato&id=".$row['COD_CONTRATO']."' class='btn btn-primary'>Editar</a>";
+                         //echo "<a href='?pagina=atualizar-contrato&id=".$row['COD_CONTRATO']."' class='btn btn-primary'>Editar</a>";
                          echo "<input type='hidden' name='id' value=".$row['COD_CONTRATO']." />";
                          echo "<input type='hidden' name='status' value=".$row['STATUS']." />";
                          
@@ -139,9 +151,9 @@
                       {
                           
                            if($i==$pagina)
-                               echo "<li class='active'><a href='?pagina=consultar-academia&p=$i'>".$i."</li></a> ";
+                               echo "<li class='active'><a href='?pagina=consultar-contrato&p=$i'>".$i."</a></li> ";
                            else 
-                               echo "<li><a href='?pagina=consultar-academia&p=$i'>".$i."</li></a> ";  
+                               echo "<li><a href='?pagina=consultar-contrato&p=$i'>".$i."</a> </li>";  
            
                        
                         }
@@ -154,10 +166,11 @@
                 }               
         }
           
-        function get_Aluno($cod_contrato)
+        function get_Aluno($cod_contrato="")
         {  
+            
             $funcao = new ClassFuncoes();
-            $SQL = "SELECT * FROM  aluno LEFT JOIN contrato ON contrato.ID_ALUNO=aluno.ID_ALUNO WHERE contrato.COD_CONTRATO='".$cod_contrato."'";
+            $SQL = "SELECT * FROM  aluno LEFT JOIN contrato ON contrato.ID_ALUNO=aluno.ID_ALUNO LEFT JOIN servico ON servico.ID_SERVICO=contrato.ID_SERVICO  WHERE contrato.COD_CONTRATO='".$cod_contrato."'";
         
              $result = $this->conexao->query($SQL);
             if($result)
@@ -193,7 +206,7 @@
         }
         function GetDadosContrato($id)
         {   $funcao = new ClassFuncoes();
-           $SQL = "SELECT academia.NOME AS ACADEMIA ,academia.ID_ACADEMIA, aluno.NOME,servico.ID_SERVICO,servico.TIPO,servico.DESCRICAO,servico.VALOR,contrato.DATA_VENC FROM contrato,aluno,servico,academia WHERE (contrato.ID_ALUNO=aluno.ID_ALUNO AND contrato.ID_ACADEMIA=academia.ID_ACADEMIA AND contrato.ID_SERVICO=servico.ID_SERVICO) AND contrato.COD_CONTRATO='".$id."'";
+           $SQL = "SELECT academia.NOME AS ACADEMIA ,academia.ID_ACADEMIA, aluno.NOME,servico.ID_SERVICO,servico.TIPO,servico.DESCRICAO,servico.VALOR,contrato.DATA_VENC,contrato.OBSERVACAO FROM contrato,aluno,servico,academia WHERE (contrato.ID_ALUNO=aluno.ID_ALUNO AND contrato.ID_ACADEMIA=academia.ID_ACADEMIA AND contrato.ID_SERVICO=servico.ID_SERVICO) AND contrato.COD_CONTRATO='".$id."'";
             
             $result = $this->conexao->query($SQL);
             if($result)
@@ -325,7 +338,42 @@
         } 
     }
         
-      
+        function update_observacao($cod,$observacao)
+        {   $funcao = new ClassFuncoes();
+            $SQL="UPDATE contrato Set OBSERVACAO='".$observacao."' WHERE cod_contrato='".$cod."'";
+            
+         if($this->conexao->query($SQL))
+          {   $funcao->msg ('ok',' Observação!');
+            //echo"<meta http-equiv='refresh' content='1'>";
+        
+          }
+           else
+          {
+            $funcao->msg ('error',$this->conexao->error); 
+            //echo"<meta http-equiv='refresh' content='2'>";
+            //echo $SQL;
+          } 
+        }
+        
+       function aceitarContrato($contrato)
+       {
+           $funcao = new ClassFuncoes();
+           
+          $SQL = "UPDATE contrato SET DATA_ACEITE='".date('Y-m-d H:i:s')."',IP='".$_SERVER['REMOTE_ADDR']."',ACEITO=1 WHERE COD_CONTRATO='".$contrato."'";
+          
+          if($this->conexao->query($SQL))
+          {   $funcao->msg ('ok','Aceite gerao com suscesso!');
+            //echo"<meta http-equiv='refresh' content='1'>";
+        
+          }
+           else
+          {
+            $funcao->msg ('error',$this->conexao->error); 
+            //echo"<meta http-equiv='refresh' content='2'>";
+            //echo $SQL;
+          } 
+          
+       }
         
     }
   
