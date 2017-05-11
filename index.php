@@ -2,17 +2,16 @@
 
 
 
-
-   
-   <?php include_once('config/include.php'); ?>
  
 
-
-
-
 <?php
-$rota = new rotas();
+
+include_once('model/autoload.php'); 
+
+$rota = new ClassRota();
 $rota->Paginacao();
+
+
 ?>
 
     

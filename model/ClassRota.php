@@ -2,7 +2,7 @@
 
  require_once 'config/include.php';
 
-      class rotas{
+      class ClassRota{
 	  
 	 public function Paginacao(){
              
