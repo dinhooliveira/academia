@@ -1,6 +1,5 @@
 <?php
 
- require_once 'config/include.php';
 
       class ClassConexao{
 	  
