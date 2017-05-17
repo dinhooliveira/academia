@@ -118,7 +118,7 @@
                                     $dados= $ClassServico->returnServico();
                                     if(isset($_POST["servico"]))echo $_POST["servico"];
                                     {
-                                        echo  "<option value='".$_POST["servico"]."'>".$_POST["servico"]."</option>";
+                                        echo  "<option value='". $_POST["servico"]."'>".$_POST["servico"]."</option>";
                                     }
                                     ?>
                                     

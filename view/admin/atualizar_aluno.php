@@ -34,7 +34,16 @@
                 
                      <!-- formulario-->
                     <form  method="post"  role="form">
+                        
+                     <div class="row">
+                         <div class="col-xs-6 col-md-3">
+                               <a href="#" class="thumbnail">
+                                       <img  src="<?php if($dados['FOTO']!="") echo"view/upload/".$dados['FOTO']; else echo"view/upload/semfoto.png" ;?>" alt="...">
+                                </a>
+                          </div>
+                    </div>
                     <div class="row"> 
+                        
                         
                         <div class="col-md-4">
                             <div class="form-group">
