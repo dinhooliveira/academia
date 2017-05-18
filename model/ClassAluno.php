@@ -33,11 +33,12 @@ class ClassAluno extends ClassConexao {
                 }
             }
             else {
+                //$funcao->lead($nome, $email, $nascimento, $celular);
                 $funcao->msg('ok', 'Cadastrado com sussesso');
             }
         }
     }
-
+    
     function ListarAluno($pagina, $consulta) {
         $funcao = new ClassFuncoes();
 
@@ -82,7 +83,7 @@ class ClassAluno extends ClassConexao {
                 else 
                     echo"view/upload/semfoto.png" ;
                 echo"' alt='...'>";
-                echo"   <b>Nome:</b> " . $row['NOME'] . "</a>";
+                echo"   <b style='font-size:200%'> " . $row['NOME'] . "</b></a>";
                 echo"<a href='#' class='list-group-item'><b>CPF:</b> " . $row['CPF'] . "</a>";
                 echo"<a href='#' class='list-group-item'><b>RG:</b> " . $row['RG'] . "</a>";
                 $date = date_create($row['DATA_NASC']);

@@ -13,8 +13,6 @@
  */
 class ClassUpload {
 
-    //put your code here
-
     private $arquivo;
     private $altura;
     private $largura;
@@ -35,8 +33,9 @@ class ClassUpload {
 
     private function ehImagem($extensao) {
         $extensoes = array('gif', 'jpeg', 'jpg', 'png');  // extensoes permitidas
-        if (in_array($extensao, $extensoes))
+        if (in_array($extensao, $extensoes)) {
             return true;
+        }
     }
 
     //largura, altura, tipo, localizacao da imagem original
@@ -48,8 +47,10 @@ class ClassUpload {
         } elseif ($imgAlt > $imgLarg) {
             $novaAlt = $this->altura;
             $novaLarg = round(($novaAlt / $imgAlt) * $imgLarg);
-        } else // altura == largura
-            $novaAltura = $novaLargura = max($this->largura, $this->altura);
+        } else { // altura == largura
+            /* @var $novaLarg type */
+            $novaAlt = $novaLarg = max($this->largura, $this->altura);
+        }
 
         //redimencionar a imagem
         //cria uma nova imagem com o novo tamanho	
@@ -72,14 +73,13 @@ class ClassUpload {
                 imagepng($novaimagem, $img_localizacao);
                 break;
         }
-        
-         
+
         //destroi as imagens criadas
         imagedestroy($novaimagem);
         imagedestroy($origem);
     }
 
-    private function salvar() {
+    public function salvar() {
         $extensao = $this->getExtensao();
 
         //gera um nome unico para a imagem em funcao do tempo
@@ -89,24 +89,25 @@ class ClassUpload {
 
         //move o arquivo
         if (!move_uploaded_file($this->arquivo['tmp_name'], $destino)) {
-            if ($this->arquivo['error'] == 1)
-                //return "Tamanho excede o permitido";
-                return false;
-            else
-                //return "Erro " . $this->arquivo['error'];
-                return false;
+            if ($this->arquivo['error'] == 1) {
+                return "Tamanho excede o permitido";
+            } else {
+                return "Erro " . $this->arquivo['error'];
+            }
         }
 
         if ($this->ehImagem($extensao)) {
             //pega a largura, altura, tipo e atributo da imagem
             list($largura, $altura, $tipo, $atributo) = getimagesize($destino);
+
             // testa se é preciso redimensionar a imagem
-            if (($largura > $this->largura) || ($altura > $this->altura))
+            if (($largura > $this->largura) || ($altura > $this->altura)) {
                 $this->redimensionar($largura, $altura, $tipo, $destino);
+            }
         }
 
-            return $novo_nome;
-       
+
+        return $novo_nome;
     }
 
 }
