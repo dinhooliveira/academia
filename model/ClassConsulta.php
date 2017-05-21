@@ -51,7 +51,7 @@ class ClassConsulta extends ClassConexao {
         $ClassServico = new ClassServico();
         $classPagamento = new ClassPagamentos();
         //seleciona todos os alunos
-        $SQL = "SELECT servico.ID_SERVICO,aluno.ID_ALUNO,aluno.NOME,contrato.COD_CONTRATO,academia.NOME as ACADEMIA FROM  contrato LEFT JOIN aluno ON contrato.ID_ALUNO = aluno.ID_ALUNO LEFT JOIN academia ON contrato.ID_ACADEMIA=academia.ID_ACADEMIA LEFT JOIN servico ON contrato.ID_SERVICO=servico.ID_SERVICO";
+        $SQL = "SELECT servico.ID_SERVICO,aluno.ID_ALUNO,aluno.NOME,contrato.COD_CONTRATO,academia.NOME as ACADEMIA,DATEDIFF(MAX(pagamentos.DATA_VENC), NOW()) as VENCIMENTO FROM  contrato LEFT JOIN aluno ON contrato.ID_ALUNO = aluno.ID_ALUNO LEFT JOIN academia ON contrato.ID_ACADEMIA=academia.ID_ACADEMIA LEFT JOIN servico ON contrato.ID_SERVICO=servico.ID_SERVICO LEFT JOIN pagamentos ON contrato.COD_CONTRATO=pagamentos.COD_CONTRATO GROUP BY contrato.COD_CONTRATO";
 
         $result = $this->conexao->query($SQL);
 
@@ -79,22 +79,21 @@ class ClassConsulta extends ClassConexao {
 
 
         while ($row = $result->fetch_assoc()) {             //recebe o ultimo pagamento do aluno     
-            $ultimo_venc = $classPagamento->getMensalUltimoPagamento($row['COD_CONTRATO']);
-
+        
             //Encontra a diferença da data atual para o ultimo vencimento
             //se a diferença for  maior que 10 está em dia 
-            if ($this->adimplencia($ultimo_venc) > 10) {
+            if ($row['VENCIMENTO'] > 10) {
                 $situacao = "Em Dia";
                 echo "<tr class='bg-success'>";
             }
 
             //se a diferença for  menor ou igual  10 está à vencer
-            if ($this->adimplencia($ultimo_venc) <= 10 && $this->adimplencia($ultimo_venc) > 0) {
+            if ($row['VENCIMENTO']<= 10 && $row['VENCIMENTO'] > 0) {
                 $situacao = "À vencer";
                 echo "<tr class='bg-warning'>";
             }
             //se a diferença for  menor   10 está atrasado
-            if ($this->adimplencia($ultimo_venc) <= 0) {
+            if ($row['VENCIMENTO'] <= 0) {
                 $situacao = "Em Atraso";
                 echo "<tr class='bg-danger'>";
             }
@@ -104,7 +103,7 @@ class ClassConsulta extends ClassConexao {
                                                 <td>{$row["ACADEMIA"]}</td>
                                                 <td>{$ClassServico->getTipoServico($row["ID_SERVICO"])}</td>
                                                 <td><b>{$situacao}</b></td>
-                                                <td>{$this->adimplencia($ultimo_venc)}</td>
+                                                <td>{$row['VENCIMENTO']}</td>
                                                 <td><a href='?pagina=historico-pagamento&id=" . $row['COD_CONTRATO'] . "'>Detalhes</a></td>
                                             </tr>";
         }
