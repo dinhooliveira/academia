@@ -6,8 +6,7 @@ class ClassAluno extends ClassConexao {
 
         $funcao = new ClassFuncoes();
         $classUpload = new ClassUpload();
-        
-        if($foto!=null) $foto = $classUpload->construtor ($foto, 1000,800, "view/upload/");
+        if($foto!=NULL) $foto = $classUpload->construtor ($foto, 1000,800, "view/upload/");
       
         if ($nome == "") {
             $funcao->msg('error', 'Nome é Obrigatório');
@@ -20,9 +19,8 @@ class ClassAluno extends ClassConexao {
         } else if ($logradouro == "" || $bairro == "" || $cidade == "" || $uf == "") {
             $funcao->msg('error', 'Consulte o CEP para preenchimento dos dados de endereço');
         } else {
-
-            $sql = "INSERT INTO aluno( nome,data_nasc,cep,logradouro,numero,complemento,bairro,cidade,uf,data_inscr,cpf,rg,email,celular,foto) VALUES ('" . $nome . "','" . $nascimento . "','" . $cep . "','" . $logradouro . "','" . $numero . "','" . $complemento . "','" . $bairro . "','" . $cidade . "','" . $uf . "','" . $inscricao . "','" . $cpf . "','" . $rg . "','" . $email . "','" . $celular . "','".$foto."')";
-
+            
+            $sql = "INSERT INTO aluno( nome,data_nasc,cep,logradouro,numero,complemento,bairro,cidade,uf,data_inscr,cpf,rg,email,celular,foto) VALUES ('" . addslashes($nome) . "','" . $nascimento . "','" . $cep . "','" . addslashes($logradouro) . "','" . $numero . "','" . $complemento . "','" . $bairro . "','" . $cidade . "','" . $uf . "','" . $inscricao . "','" . $cpf . "','" . $rg . "','" . $email . "','" . $celular . "','".$foto."')";
             $result = $this->conexao->query($sql);
 
             if (!$result) {
@@ -30,6 +28,8 @@ class ClassAluno extends ClassConexao {
                 {
                     $funcao->msg('info', 'CPF já possui cadastro');
                    if($foto!=FALSE) unlink("view/upload/".$foto);
+                }else{
+                     $funcao->msg('info', $this->conexao->error);
                 }
             }
             else {
@@ -78,8 +78,8 @@ class ClassAluno extends ClassConexao {
                 echo"<div class='list-group'>"
                 . "<a href='#' class='list-group-item active'>"
                 ."<img style='width:10%; hight:10%; border-radius:50px;'  src='";
-                if($row['FOTO']!="") 
-                    echo"view/upload/".$row['FOTO']; 
+                if($row['foto']!="") 
+                    echo"view/upload/".$row['foto']; 
                 else 
                     echo"view/upload/semfoto.png" ;
                 echo"' alt='...'>";

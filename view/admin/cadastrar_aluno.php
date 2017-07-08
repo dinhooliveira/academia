@@ -183,11 +183,10 @@
 
     <?php
     $aluno = new ClassAluno();
-    if ((isset($_POST["cadastrar_aluno"])) && (!empty($_FILES['foto']))) {
+    if ((isset($_POST["cadastrar_aluno"])) && (strlen($_FILES['foto']['name'])>0)) {
         $aluno->CadastrarAluno($_POST['nome'], $_POST['nascimento'], $_POST['cep'], $_POST['logradouro'], $_POST['numero'], $_POST['complemento'], $_POST['bairro'], $_POST['cidade'], $_POST['uf'], $_POST['inscricao'], $_POST['cpf'], $_POST['rg'], $_POST['email'], $_POST['celular'], $_FILES['foto']);
-    }
-    if (isset($_POST['cadastrar_aluno']) && (empty($_FILES['foto']))) {
-        $aluno->CadastrarAluno($_POST['nome'], $_POST['nascimento'], $_POST['cep'], $_POST['logradouro'], $_POST['numero'], $_POST['complemento'], $_POST['bairro'], $_POST['cidade'], $_POST['uf'], $_POST['inscricao'], $_POST['cpf'], $_POST['rg'], $_POST['email'], $_POST['celular']);
+    }else{
+        $aluno->CadastrarAluno($_POST['nome'], $_POST['nascimento'], $_POST['cep'], addslashes($_POST['logradouro']), $_POST['numero'], $_POST['complemento'], $_POST['bairro'], $_POST['cidade'], $_POST['uf'], $_POST['inscricao'], $_POST['cpf'], $_POST['rg'], $_POST['email'], $_POST['celular']);
     }
     ?>
 
