@@ -22,12 +22,21 @@
 
         <!-- formulario-->
         <form  method="post" enctype='multipart/form-data' role="form">
+            
+            <div class="row">
+                <div class="col-xs-6 col-md-3">
+                    <a href="#" class="thumbnail">
+                        <img  id="form_imagem"></img>
+                    </a>
+                </div>
+            </div> 
+            
             <div class="row"> 
-
+                     
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Adicionar foto</label>
-                        <input type='file'class="form-control" name='foto' >
+                        <input type='file'class="form-control" name='foto'  onchange="imagem(this)" >
 
                     </div>
                 </div>
@@ -183,10 +192,13 @@
 
     <?php
     $aluno = new ClassAluno();
-    if ((isset($_POST["cadastrar_aluno"])) && (strlen($_FILES['foto']['name'])>0)) {
-        $aluno->CadastrarAluno($_POST['nome'], $_POST['nascimento'], $_POST['cep'], $_POST['logradouro'], $_POST['numero'], $_POST['complemento'], $_POST['bairro'], $_POST['cidade'], $_POST['uf'], $_POST['inscricao'], $_POST['cpf'], $_POST['rg'], $_POST['email'], $_POST['celular'], $_FILES['foto']);
-    }else{
-        $aluno->CadastrarAluno($_POST['nome'], $_POST['nascimento'], $_POST['cep'], addslashes($_POST['logradouro']), $_POST['numero'], $_POST['complemento'], $_POST['bairro'], $_POST['cidade'], $_POST['uf'], $_POST['inscricao'], $_POST['cpf'], $_POST['rg'], $_POST['email'], $_POST['celular']);
+    if (isset($_POST["cadastrar_aluno"])){
+        
+        echo $_FILES['foto']['name']="";
+       if(!empty($_FILES['foto']['name']))
+         $aluno->CadastrarAluno($_POST['nome'], $_POST['nascimento'], $_POST['cep'], $_POST['logradouro'], $_POST['numero'], $_POST['complemento'], $_POST['bairro'], $_POST['cidade'], $_POST['uf'], $_POST['inscricao'], $_POST['cpf'], $_POST['rg'], $_POST['email'], $_POST['celular'], $_FILES['foto']);
+        else
+         $aluno->CadastrarAluno($_POST['nome'], $_POST['nascimento'], $_POST['cep'], $_POST['logradouro'], $_POST['numero'], $_POST['complemento'], $_POST['bairro'], $_POST['cidade'], $_POST['uf'], $_POST['inscricao'], $_POST['cpf'], $_POST['rg'], $_POST['email'], $_POST['celular']);
     }
     ?>
 
@@ -199,3 +211,20 @@
 </div><!--container-fluidr-->
 
 </div><!--page-wrapper-->
+
+
+<script type="text/javascript">
+
+
+         imagem('');
+         function imagem(x){
+               var img =  <?="'view/upload/semfoto.png'"; ?>
+
+               if(typeof x !== 'object')
+                document.getElementById('form_imagem').src = img;
+               else
+                document.getElementById('form_imagem').src = window.URL.createObjectURL(x.files[0]);
+
+         }
+
+</script>

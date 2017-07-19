@@ -6,7 +6,7 @@ class ClassAluno extends ClassConexao {
 
         $funcao = new ClassFuncoes();
         $classUpload = new ClassUpload();
-        if($foto!=NULL) $foto = $classUpload->construtor ($foto, 1000,800, "view/upload/");
+        if($foto!=null) $foto = $classUpload->construtor($foto, 1000,800, "view/upload/");
       
         if ($nome == "") {
             $funcao->msg('error', 'Nome é Obrigatório');
