@@ -69,6 +69,13 @@
                           if(isset($_POST['bt_status']))
                          
                              $contrato->AtivarContrato($_POST['id'], $_POST['status']);
+                          
+                          
+                          if(isset($_POST['reeviar_contrato'])){
+                              $email = new ClassEmail();
+                              $email->emailContrato($_POST['reeviar_contrato']);
+                          }
+                              
                         ?>
                         
                         

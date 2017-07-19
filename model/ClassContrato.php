@@ -98,8 +98,7 @@ class ClassContrato extends ClassConexao {
                 echo "<br>  <a href='?pagina=historico-pagamento&id=" . $row['COD_CONTRATO'] . "' class='btn btn-warning'>Histórico/Pagamento</a> ";
                 echo "<a href='?pagina=atualizar-data-aula&id=" . $row['COD_CONTRATO'] . "' class='btn btn-primary'>Aulas</a> ";
                 if ($row['ACEITO'] == 0) {
-
-                    echo "<a href='#' class='btn btn-danger'>Contrato pendente</a> ";
+                    echo "<button type='submit' name='reeviar_contrato'  class='btn btn-danger'>Contrato pendente</button> ";
                 } else
                     echo "<a href='/academia/?pagina=contrato-aluno&cod_contrato=" . $row['COD_CONTRATO'] . "' target='_blank' class='btn btn-success'>Contrato aceito</a> ";
                 //não haverá necessida de redirecionar para pagina de atualização de contrato
