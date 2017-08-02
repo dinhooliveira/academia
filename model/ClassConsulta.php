@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of ClassConsulta
  *
@@ -46,76 +40,29 @@ class ClassConsulta extends ClassConexao {
         }
     }
 
-    function ConsultarMensal() {
-        $funcao = new ClassFuncoes();
-        $ClassServico = new ClassServico();
-        $classPagamento = new ClassPagamentos();
-        //seleciona todos os alunos
-        $SQL = "SELECT servico.ID_SERVICO,aluno.ID_ALUNO,aluno.NOME,contrato.COD_CONTRATO,academia.NOME as ACADEMIA,DATEDIFF(MAX(pagamentos.DATA_VENC), NOW()) as VENCIMENTO FROM  contrato LEFT JOIN aluno ON contrato.ID_ALUNO = aluno.ID_ALUNO LEFT JOIN academia ON contrato.ID_ACADEMIA=academia.ID_ACADEMIA LEFT JOIN servico ON contrato.ID_SERVICO=servico.ID_SERVICO LEFT JOIN pagamentos ON contrato.COD_CONTRATO=pagamentos.COD_CONTRATO GROUP BY contrato.COD_CONTRATO";
+    function ConsultarVencimentos() {
+        //seleciona todos os contratos
+        $SQL = "SELECT 
+                * FROM
+                (
+                    SELECT 
+                         DATEDIFF(MAX(pg.DATA_VENC),NOW()) AS vencimento,
+                         pg.*, al.*,ac.NOME AS academia,sv.TIPO
+                        FROM aluno AS al
+                        LEFT JOIN contrato AS co ON co.ID_ALUNO = al.ID_ALUNO
+                        LEFT JOIN pagamentos AS pg ON pg.COD_CONTRATO = co.COD_CONTRATO
+                        LEFT JOIN academia AS ac ON ac.ID_ACADEMIA = co.ID_ACADEMIA
+                        LEFT JOIN servico AS sv ON sv.ID_SERVICO = pg.ID_SERVICO
+                     GROUP BY co.COD_CONTRATO
+                    )AS con
+                WHERE con.COD_CONTRATO IS NOT NULL";
 
         $result = $this->conexao->query($SQL);
 
         if (!$result)
             $funcao->msg('error', $this->conexao->error);
         else
-            echo"<div class='panel panel-default'>
-                            <div class='panel-heading'>
-                                <h3 class='panel-title'><i class='fa fa-list-alt fa-fw'></i> Relatório de Vencimentos</h3>
-                            </div>
-                            <div class='panel-body'>
-                                <div class='table-responsive'>
-                                    <table class='table table-bordered table-hover '>
-                                        <thead>
-                                            <tr>
-                                                <th>Aluno</th>
-                                                 <th>Academia</th>
-                                                 <th>Tipo</th>
-                                                <th>Situação</th>
-                                                <th>Vencimento em dias</th>
-                                                <th>Histórico</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>";
-
-
-        while ($row = $result->fetch_assoc()) {             //recebe o ultimo pagamento do aluno     
-        
-            //Encontra a diferença da data atual para o ultimo vencimento
-            //se a diferença for  maior que 10 está em dia 
-            if ($row['VENCIMENTO'] > 10) {
-                $situacao = "Em Dia";
-                echo "<tr class='bg-success'>";
-            }
-
-            //se a diferença for  menor ou igual  10 está à vencer
-            if ($row['VENCIMENTO']<= 10 && $row['VENCIMENTO'] > 0) {
-                $situacao = "À vencer";
-                echo "<tr class='bg-warning'>";
-            }
-            //se a diferença for  menor   10 está atrasado
-            if ($row['VENCIMENTO'] <= 0) {
-                $situacao = "Em Atraso";
-                echo "<tr class='bg-danger'>";
-            }
-
-            echo" 
-                                                <td>{$row["NOME"]}</td>
-                                                <td>{$row["ACADEMIA"]}</td>
-                                                <td>{$ClassServico->getTipoServico($row["ID_SERVICO"])}</td>
-                                                <td><b>{$situacao}</b></td>
-                                                <td>{$row['VENCIMENTO']}</td>
-                                                <td><a href='?pagina=historico-pagamento&id=" . $row['COD_CONTRATO'] . "'>Detalhes</a></td>
-                                            </tr>";
-        }
-
-        echo"</tbody>
-                                    </table>
-                                </div>
-                                <div class='text-right'>
-                                    <a href='#'>View All Transactions <i class='fa fa-arrow-circle-right'></i></a>
-                                </div>
-                            </div>
-                        </div>";
+          return $result;
     }
 
     function getValorMensalTotalReceber($cod) {
@@ -239,94 +186,98 @@ class ClassConsulta extends ClassConexao {
     }
 
     function get_Qtd_Em_Dia() {
-        $funcao = new ClassFuncoes();
-        $ClassServico = new ClassServico();
-        $classPagamento = new ClassPagamentos();
-        //seleciona todos os alunos
-        $SQL = "SELECT servico.ID_SERVICO,aluno.ID_ALUNO,aluno.NOME,contrato.COD_CONTRATO,academia.NOME as ACADEMIA FROM  contrato LEFT JOIN aluno ON contrato.ID_ALUNO = aluno.ID_ALUNO LEFT JOIN academia ON contrato.ID_ACADEMIA=academia.ID_ACADEMIA LEFT JOIN servico ON contrato.ID_SERVICO=servico.ID_SERVICO";
-
-        $result = $this->conexao->query($SQL);
-
-        if (!$result)
-            $funcao->msg('error', $this->conexao->error);
-        else
-            $cont = 0;
-        while ($row = $result->fetch_assoc()) {             //recebe o ultimo pagamento do aluno     
-            $ultimo_venc = $classPagamento->getMensalUltimoPagamento($row['COD_CONTRATO']);
-
-
-            //Encontra a diferença da data atual para o ultimo vencimento
-            //se a diferença for  maior que 10 está em dia 
-            if ($this->adimplencia($ultimo_venc) > 10) {
-                $cont++;
-            }
-        }
-
-        return $cont;
+        $result = $this->get_Em_Dia();
+        return $result->num_rows;
+        
     }
 
     function get_Qtd_Em_Vencer() {
-
-        $funcao = new ClassFuncoes();
-        $ClassServico = new ClassServico();
-        $classPagamento = new ClassPagamentos();
-        //seleciona todos os alunos
-        $SQL = "SELECT servico.ID_SERVICO,aluno.ID_ALUNO,aluno.NOME,contrato.COD_CONTRATO,academia.NOME as ACADEMIA FROM  contrato LEFT JOIN aluno ON contrato.ID_ALUNO = aluno.ID_ALUNO LEFT JOIN academia ON contrato.ID_ACADEMIA=academia.ID_ACADEMIA LEFT JOIN servico ON contrato.ID_SERVICO=servico.ID_SERVICO";
-
-        $result = $this->conexao->query($SQL);
-
-        if (!$result)
-            $funcao->msg('error', $this->conexao->error);
-        else
-            $cont = 0;
-        while ($row = $result->fetch_assoc()) {             //recebe o ultimo pagamento do aluno     
-            $ultimo_venc = $classPagamento->getMensalUltimoPagamento($row['COD_CONTRATO']);
-
-
-            //Encontra a diferença da data atual para o ultimo vencimento
-            //se a diferença for  menor ou igual  10 está à vencer
-            if ($this->adimplencia($ultimo_venc) <= 10 && $this->adimplencia($ultimo_venc) > 0) {
-                $cont++;
-            }
-            //se a diferença for  menor   10 está atrasado
-            if ($this->adimplencia($ultimo_venc) <= 0) {
-                $situacao = "Atrasado";
-                echo "<tr class='bg-danger'>";
-            }
-        }
-
-        return $cont;
+       $result = $this->get_Em_Vencer();
+        return $result->num_rows;
     }
 
     function get_Qtd_Em_Atraso() {
-
-        $funcao = new ClassFuncoes();
-        $ClassServico = new ClassServico();
-        $classPagamento = new ClassPagamentos();
-        //seleciona todos os alunos
-        $SQL = "SELECT servico.ID_SERVICO,aluno.ID_ALUNO,aluno.NOME,contrato.COD_CONTRATO,academia.NOME as ACADEMIA FROM  contrato LEFT JOIN aluno ON contrato.ID_ALUNO = aluno.ID_ALUNO LEFT JOIN academia ON contrato.ID_ACADEMIA=academia.ID_ACADEMIA LEFT JOIN servico ON contrato.ID_SERVICO=servico.ID_SERVICO";
-
-        $result = $this->conexao->query($SQL);
+      $result = $this->get_Em_Atraso();
+      return $result->num_rows;
+    }
+    
+    function get_Em_Dia(){
+       $SQL = " SELECT 
+                * FROM
+                (
+                    SELECT 
+                         DATEDIFF(MAX(pg.DATA_VENC),NOW()) AS vencimento,
+                         pg.*,date_format(pg.DATA_VENC,'%d-%m-%Y') as DT_VENCIMENTO, 
+                         al.*,date_format(al.DATA_NASC,'%d-%m-%Y') as NASCIMENTO,
+                         ac.NOME AS academia,sv.TIPO,sv.DESCRICAO
+                        FROM aluno AS al
+                        LEFT JOIN contrato AS co ON co.ID_ALUNO = al.ID_ALUNO
+                        LEFT JOIN pagamentos AS pg ON pg.COD_CONTRATO = co.COD_CONTRATO
+                        LEFT JOIN academia AS ac ON ac.ID_ACADEMIA = co.ID_ACADEMIA
+                        LEFT JOIN servico AS sv ON sv.ID_SERVICO = pg.ID_SERVICO
+                     GROUP BY co.COD_CONTRATO
+                    )AS con
+                WHERE con.COD_CONTRATO IS NOT NULL AND con.vencimento >10";
+       
+       $result = $this->conexao->query($SQL);
 
         if (!$result)
             $funcao->msg('error', $this->conexao->error);
         else
-            $cont = 0;
-
-
-        while ($row = $result->fetch_assoc()) {             //recebe o ultimo pagamento do aluno     
-            $ultimo_venc = $classPagamento->getMensalUltimoPagamento($row['COD_CONTRATO']);
-
-
-            //Encontra a diferença da data atual para o ultimo vencimento
-            //se a diferença for  menor   10 está atrasado
-            if ($this->adimplencia($ultimo_venc) <= 0) {
-                $cont++;
-            }
-        }
-
-        return $cont;
+          return $result;
     }
+    
+    function get_Em_Vencer(){
+   $SQL = " SELECT 
+            * FROM
+            (
+                SELECT 
+                     DATEDIFF(MAX(pg.DATA_VENC),NOW()) AS vencimento,
+                     pg.*,date_format(pg.DATA_VENC,'%d-%m-%Y') as DT_VENCIMENTO, 
+                     al.*,date_format(al.DATA_NASC,'%d-%m-%Y') as NASCIMENTO,
+                     ac.NOME AS academia,sv.TIPO,sv.DESCRICAO
+                    FROM aluno AS al
+                    LEFT JOIN contrato AS co ON co.ID_ALUNO = al.ID_ALUNO
+                    LEFT JOIN pagamentos AS pg ON pg.COD_CONTRATO = co.COD_CONTRATO
+                    LEFT JOIN academia AS ac ON ac.ID_ACADEMIA = co.ID_ACADEMIA
+                    LEFT JOIN servico AS sv ON sv.ID_SERVICO = pg.ID_SERVICO
+                 GROUP BY co.COD_CONTRATO
+                )AS con
+            WHERE con.COD_CONTRATO IS NOT NULL AND con.vencimento BETWEEN 1 AND 10";
+
+   $result = $this->conexao->query($SQL);
+
+    if (!$result)
+        $funcao->msg('error', $this->conexao->error);
+    else
+      return $result;
+}
+    
+    function get_Em_Atraso(){
+   $SQL = " SELECT 
+            * FROM
+            (
+                SELECT 
+                     DATEDIFF(MAX(pg.DATA_VENC),NOW()) AS vencimento,
+                     pg.*,date_format(pg.DATA_VENC,'%d-%m-%Y') as DT_VENCIMENTO, 
+                     al.*,date_format(al.DATA_NASC,'%d-%m-%Y') as NASCIMENTO,
+                     ac.NOME AS academia,sv.TIPO,sv.DESCRICAO
+                    FROM aluno AS al
+                    LEFT JOIN contrato AS co ON co.ID_ALUNO = al.ID_ALUNO
+                    LEFT JOIN pagamentos AS pg ON pg.COD_CONTRATO = co.COD_CONTRATO
+                    LEFT JOIN academia AS ac ON ac.ID_ACADEMIA = co.ID_ACADEMIA
+                    LEFT JOIN servico AS sv ON sv.ID_SERVICO = pg.ID_SERVICO
+                 GROUP BY co.COD_CONTRATO
+                )AS con
+            WHERE con.COD_CONTRATO IS NOT NULL AND con.vencimento<=0";
+
+   $result = $this->conexao->query($SQL);
+
+    if (!$result)
+        $funcao->msg('error', $this->conexao->error);
+    else
+      return $result;
+}
 
     function relatorioAcadmia($dataI = '0000-00-00', $dataF = '0000-00-00', $academia = '') {
         $funcao = new ClassFuncoes();
@@ -413,3 +364,7 @@ class ClassConsulta extends ClassConexao {
     }
 
 }
+
+
+
+        

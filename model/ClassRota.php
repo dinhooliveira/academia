@@ -17,15 +17,38 @@ class ClassRota {
             case "login":
                 include("view/login/login.php");
                 break;
+            
             case"admin":
                 $login->seguranca();
                 include("view/admin/header.php");
                 include("view/admin/menu.php");
                 include("view/admin/consultar_valores.php");
                 include("view/admin/footer.php");
-
                 break;
-
+            
+             case"alunos-em-dia":
+                $login->seguranca();
+                include("view/admin/header.php");
+                include("view/admin/menu.php");
+                include("view/admin/consultar_em_dia.php");
+                include("view/admin/footer.php");
+                break;
+            
+            case"alunos-a-vencer":
+                $login->seguranca();
+                include("view/admin/header.php");
+                include("view/admin/menu.php");
+                include("view/admin/consultar_em_vencer.php");
+                include("view/admin/footer.php");
+                break;
+            
+            case"alunos-em-atraso":
+                $login->seguranca();
+                include("view/admin/header.php");
+                include("view/admin/menu.php");
+                include("view/admin/consultar_em_atraso.php");
+                include("view/admin/footer.php");
+                break;
             case"cadastrar-aluno":
                 $login->seguranca();
                 include("view/admin/header.php");

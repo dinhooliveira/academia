@@ -302,3 +302,5 @@ function consulta_hb_data(){
         document.getElementById("hb").value="";
     }
 }
+
+

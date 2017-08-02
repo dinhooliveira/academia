@@ -80,7 +80,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <a href="#">
+                            <a href="?pagina=alunos-em-dia">
                                 <div class="panel-footer">
                                     <span class="pull-left">Detalhes</span>
                                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -103,7 +103,7 @@
                                 </div>
                             </div>
                     
-                            <a href="#">
+                            <a href="?pagina=alunos-a-vencer">
                                 <div class="panel-footer">
                                     <span class="pull-left">Detalhes</span>
                                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -129,7 +129,7 @@
                                 </div>
                             </div>
                     
-                            <a href="#">
+                            <a href="?pagina=alunos-em-atraso">
                                 <div class="panel-footer">
                                     <span class="pull-left">Detalhes</span>
                                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -143,11 +143,73 @@
                 </div>
     
                 <!-- /.row -->
-           <?php $ClassConsulta->ConsultarMensal();
+ <div class='panel panel-default'>
+     
+    <div class='panel-heading'>
+        <h3 class='panel-title'><i class='fa fa-list-alt fa-fw'></i> Relatório de Vencimentos</h3>
+    </div>
+     
+        <div class='panel-body'>
+            <div class='table-responsive'>
+                 <table class='table table-bordered table-hover '>
+                    <thead>
+                        <tr>
+                            <th>Aluno</th>
+                             <th>Academia</th>
+                             <th>Tipo</th>
+                            <th>Situação</th>
+                            <th>Vencimento em dias</th>
+                            <th>Histórico</th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+
+       <?php
+            $result = $ClassConsulta->ConsultarVencimentos();
+            while ($row = $result->fetch_assoc()):            //recebe o ultimo pagamento do aluno     
+        
+                //Encontra a diferença da data atual para o ultimo vencimento
+                //se a diferença for  maior que 10 está em dia 
+                if ($row['vencimento'] > 10) {
+                    $situacao = "Em Dia";
+                    echo "<tr class='bg-success'>";
+                }
+
+
+                //se a diferença for  menor ou igual  10 está à vencer
+                if ($row['vencimento']<= 10 && $row['vencimento'] > 0) {
+                    $situacao = "À vencer";
+                    echo "<tr class='bg-warning'>";
+                }
+                //se a diferença for  menor   10 está atrasado
+                if ($row['vencimento'] <= 0) {
+                    $situacao = "Em Atraso";
+                    echo "<tr class='bg-danger'>";
+                }
+        ?>
+ 
+                <td><?=$row["NOME"];?></td>
+                <td><?=$row["academia"];?></td>
+                <td><?=$row["TIPO"]?></td>
+                <td><b><?=$situacao?></b></td>
+                <td><?=$row['vencimento']?></td>
+                <td><a href="?pagina=historico-pagamento&id=<?=$row['COD_CONTRATO']?>">Detalhes</a></td>
+            </tr>
+
+        <?php endwhile;?>
+           </tbody>
+        </table>
+    </div>
+    <div class='text-right'>
+        <a href='#'>View All Transactions <i class='fa fa-arrow-circle-right'></i></a>
+    </div>
+</div>
+</div>
+           <?php 
                  $classpagamentos = new ClassPagamentos();
                  //$classpagamentos->gerarPagamentoALunoTrimestral();
                  $ClassConsulta->relatorioAcadmia();
            ?>
-                
 </div>
 </div>
