@@ -129,44 +129,7 @@
                     <div class="form-group">
                         <label>UF</label>
                         <input type="text" class="form-control" name="uf" id="uf" placeholder="UF"  value="<?php if (isset($_POST['uf'])) echo $_POST['uf']; ?>" readonly required>
-                        <!--<select class="form-control" name="uf" id="uf" readonly required>
-                            
-                        <?php
-                        /* if(isset($_POST['uf']))
-                          echo "<option value='".$_POST['uf']."'>";
-                          echo $_POST['uf'];
-                          echo "</option>"; */
-                        ?>
-                          <option value="AC">AC</option>
-                          <option value="AL">AL</option>
-                          <option value="AP">AP</option>
-                          <option value="AM">AM</option>
-                          <option value="BA">BA</option>
-                          <option value="DF">DF</option>
-                          <option value="ES">ES</option>
-                          <option value="GO">GO</option>
-                          <option value="MA">MA</option>
-                          <option value="MT">MT</option>
-                          <option value="MS">MS</option>
-                          <option value="MG">MG</option>
-                          <option value="PR">PR</option>
-                          <option value="PB">PB</option>
-                          <option value="PA">PA</option>
-                          <option value="PE">PE</option>
-                          <option value="PI">PI</option>
-                          <option value="RJ">RJ</option>
-                          <option value="RN">RN</option>
-                          <option value="RS">RS</option>
-                          <option value="RO">RO</option>
-                          <option value="RR">RR</option>
-                          <option value="SC">SC</option>
-                          <option value="SE">SE</option>
-                          <option value="SP">SP</option>
-                          <option value="TO">TO</option>
-                          
-
-                            
-                        </select>-->
+                   
                     </div>
                 </div>
                 <div class="col-md-2">
@@ -194,7 +157,7 @@
     $aluno = new ClassAluno();
     if (isset($_POST["cadastrar_aluno"])){
         
-        echo $_FILES['foto']['name']="";
+       //echo $_FILES['foto']['name']="";
        if(!empty($_FILES['foto']['name']))
          $aluno->CadastrarAluno($_POST['nome'], $_POST['nascimento'], $_POST['cep'], $_POST['logradouro'], $_POST['numero'], $_POST['complemento'], $_POST['bairro'], $_POST['cidade'], $_POST['uf'], $_POST['inscricao'], $_POST['cpf'], $_POST['rg'], $_POST['email'], $_POST['celular'], $_FILES['foto']);
         else

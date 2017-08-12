@@ -138,9 +138,12 @@ class ClassAluno extends ClassConexao {
             echo msg('error', $this->conexao->error);
     }
 
-    function AtualizarAluno($id, $nome, $nascimento, $cep, $logradouro, $numero, $complemento, $bairro, $cidade, $uf, $inscricao, $cpf, $rg, $email, $celular) {
+    function AtualizarAluno($id, $nome, $nascimento, $cep, $logradouro, $numero, $complemento, $bairro, $cidade, $uf, $inscricao, $cpf, $rg, $email, $celular,$foto=null,$foto_antiga=null) {
 
         $funcao = new ClassFuncoes();
+        $classUpload = new ClassUpload();
+        if($foto!=null) $foto = $classUpload->construtor($foto, 1000,800, "view/upload/");
+        
         if ($nome == "") {
             $funcao->msg('error', 'Nome é Obrigatório');
         } else if (!$funcao->validCPF($cpf)) {
@@ -152,15 +155,52 @@ class ClassAluno extends ClassConexao {
         } else if ($logradouro == "" || $bairro == "" || $cidade == "" || $uf == "") {
             $funcao->msg('error', 'Consulte o CEP para preenchimento dos dados de endereço');
         } else {
-
-            $sql = "UPDATE aluno Set nome='" . $nome . "',data_nasc='" . $nascimento . "',cep='" . $cep . "',logradouro='" . $logradouro . "',numero=" . $numero . ",complemento='" . $complemento . "',bairro='" . $bairro . "',cidade='" . $cidade . "',uf='" . $uf . "',data_inscr='" . $inscricao . "',cpf='" . $cpf . "',rg='" . $rg . "',email='" . $email . "',celular='" . $celular . "' WHERE ID_ALUNO=" . $id . "";
-
+         
+           if($foto==null){
+            $sql = "UPDATE aluno "
+                   . " Set nome='" . $nome 
+                   . "',data_nasc='" . $nascimento 
+                   . "',cep='" . $cep 
+                   . "',logradouro='" . $logradouro 
+                   . "',numero=" . $numero 
+                   . ",complemento='" . $complemento 
+                   . "',bairro='" . $bairro 
+                   . "',cidade='" . $cidade 
+                   . "',uf='" . $uf 
+                   . "',data_inscr='" . $inscricao 
+                   . "',cpf='" . $cpf 
+                   . "',rg='" . $rg 
+                   . "',email='" . $email 
+                   . "',celular='" . $celular 
+                   . "' WHERE ID_ALUNO=" . $id . "";
+            
+            
+           }else{
+               $sql = "UPDATE aluno "
+                      . "SET nome='" . $nome 
+                      . "',data_nasc='" . $nascimento 
+                      . "',cep='" . $cep 
+                      . "',logradouro='" . $logradouro 
+                      . "',numero=" . $numero 
+                      . ",complemento='" . $complemento 
+                      . "',bairro='" . $bairro 
+                      . "',cidade='" . $cidade 
+                      . "',uf='" . $uf 
+                      . "',data_inscr='" . $inscricao 
+                      . "',cpf='" . $cpf 
+                      . "',rg='" . $rg 
+                      . "',email='" . $email 
+                      . "',celular='" . $celular 
+                      . "',foto='" . $foto 
+                      . "' WHERE ID_ALUNO=" . $id . "";
+            }
             $result = $this->conexao->query($sql);
 
             if (!$result) {
-
+                if($foto!=FALSE) unlink("view/upload/".$foto);
                 $funcao->msg('error', 'Não foi possivel atualizar os dados!');
             } else {
+                if($foto_antiga!=null) unlink("view/upload/".$foto_antiga);
                 $funcao->msg('ok', 'Atualizado com sussesso!');
             }
         }
