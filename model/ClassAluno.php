@@ -41,7 +41,7 @@ class ClassAluno extends ClassConexao {
     
     function ListarAluno($pagina, $consulta) {
         $funcao = new ClassFuncoes();
-
+        
         $SQL = "SELECT * FROM aluno where(NOME LIKE '%" . $consulta . "%' or CPF LIKE '%" . $consulta . "%' or LOGRADOURO LIKE '%" . $consulta . "%' or CIDADE LIKE '%" . $consulta . "%' or BAIRRO LIKE '%" . $consulta . "%' or UF LIKE '%" . $consulta . "%')";
 
         $result = $this->conexao->query($SQL);

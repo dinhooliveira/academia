@@ -108,13 +108,11 @@ class ClassContrato extends ClassConexao {
 
 
                 //função não será mais necessaria mas ta comentado caso necessite para outra ocasião
-                /* if($row['STATUS']=='1')
+                  if($row['STATUS']=='1')
                   echo " <input type='submit' name='bt_status' value='Ativo' class='btn btn-success' />";
                   else
                   echo " <input type='submit' name='bt_status' value='Desativado' class='btn btn-danger' />";
-                 */
-
-                echo"</form>" . " </li></div>";
+                  echo"</form>" . " </li></div>";
             }
 
 

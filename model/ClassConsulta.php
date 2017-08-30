@@ -47,7 +47,7 @@ class ClassConsulta extends ClassConexao {
                 (
                     SELECT 
                          DATEDIFF(MAX(pg.DATA_VENC),NOW()) AS vencimento,
-                         pg.*, al.*,ac.NOME AS academia,sv.TIPO
+                         pg.*, al.*,ac.NOME AS academia,sv.TIPO,co.STATUS AS SITUACAO
                         FROM aluno AS al
                         LEFT JOIN contrato AS co ON co.ID_ALUNO = al.ID_ALUNO
                         LEFT JOIN pagamentos AS pg ON pg.COD_CONTRATO = co.COD_CONTRATO
@@ -55,7 +55,7 @@ class ClassConsulta extends ClassConexao {
                         LEFT JOIN servico AS sv ON sv.ID_SERVICO = pg.ID_SERVICO
                      GROUP BY co.COD_CONTRATO
                     )AS con
-                WHERE con.COD_CONTRATO IS NOT NULL";
+                WHERE con.COD_CONTRATO IS NOT NULL AND con.SITUACAO=1 ";
 
         $result = $this->conexao->query($SQL);
 
@@ -209,7 +209,7 @@ class ClassConsulta extends ClassConexao {
                          DATEDIFF(MAX(pg.DATA_VENC),NOW()) AS vencimento,
                          pg.*,date_format(pg.DATA_VENC,'%d-%m-%Y') as DT_VENCIMENTO, 
                          al.*,date_format(al.DATA_NASC,'%d-%m-%Y') as NASCIMENTO,
-                         ac.NOME AS academia,sv.TIPO,sv.DESCRICAO
+                         ac.NOME AS academia,sv.TIPO,sv.DESCRICAO,co.STATUS AS SITUACAO
                         FROM aluno AS al
                         LEFT JOIN contrato AS co ON co.ID_ALUNO = al.ID_ALUNO
                         LEFT JOIN pagamentos AS pg ON pg.COD_CONTRATO = co.COD_CONTRATO
@@ -217,7 +217,7 @@ class ClassConsulta extends ClassConexao {
                         LEFT JOIN servico AS sv ON sv.ID_SERVICO = pg.ID_SERVICO
                      GROUP BY co.COD_CONTRATO
                     )AS con
-                WHERE con.COD_CONTRATO IS NOT NULL AND con.vencimento >10";
+                WHERE con.COD_CONTRATO IS NOT NULL AND con.SITUACAO = 1 AND con.vencimento >10";
        
        $result = $this->conexao->query($SQL);
 
@@ -235,7 +235,7 @@ class ClassConsulta extends ClassConexao {
                      DATEDIFF(MAX(pg.DATA_VENC),NOW()) AS vencimento,
                      pg.*,date_format(pg.DATA_VENC,'%d-%m-%Y') as DT_VENCIMENTO, 
                      al.*,date_format(al.DATA_NASC,'%d-%m-%Y') as NASCIMENTO,
-                     ac.NOME AS academia,sv.TIPO,sv.DESCRICAO
+                     ac.NOME AS academia,sv.TIPO,sv.DESCRICAO,co.STATUS AS SITUACAO
                     FROM aluno AS al
                     LEFT JOIN contrato AS co ON co.ID_ALUNO = al.ID_ALUNO
                     LEFT JOIN pagamentos AS pg ON pg.COD_CONTRATO = co.COD_CONTRATO
@@ -243,7 +243,7 @@ class ClassConsulta extends ClassConexao {
                     LEFT JOIN servico AS sv ON sv.ID_SERVICO = pg.ID_SERVICO
                  GROUP BY co.COD_CONTRATO
                 )AS con
-            WHERE con.COD_CONTRATO IS NOT NULL AND con.vencimento BETWEEN 1 AND 10";
+            WHERE con.COD_CONTRATO IS NOT NULL AND  con.SITUACAO = 1 AND con.vencimento BETWEEN 1 AND 10";
 
    $result = $this->conexao->query($SQL);
 
@@ -261,7 +261,7 @@ class ClassConsulta extends ClassConexao {
                      DATEDIFF(MAX(pg.DATA_VENC),NOW()) AS vencimento,
                      pg.*,date_format(pg.DATA_VENC,'%d-%m-%Y') as DT_VENCIMENTO, 
                      al.*,date_format(al.DATA_NASC,'%d-%m-%Y') as NASCIMENTO,
-                     ac.NOME AS academia,sv.TIPO,sv.DESCRICAO
+                     ac.NOME AS academia,sv.TIPO,sv.DESCRICAO,co.STATUS AS SITUACAO
                     FROM aluno AS al
                     LEFT JOIN contrato AS co ON co.ID_ALUNO = al.ID_ALUNO
                     LEFT JOIN pagamentos AS pg ON pg.COD_CONTRATO = co.COD_CONTRATO
@@ -269,7 +269,7 @@ class ClassConsulta extends ClassConexao {
                     LEFT JOIN servico AS sv ON sv.ID_SERVICO = pg.ID_SERVICO
                  GROUP BY co.COD_CONTRATO
                 )AS con
-            WHERE con.COD_CONTRATO IS NOT NULL AND con.vencimento<=0";
+            WHERE con.COD_CONTRATO IS NOT NULL   AND con.SITUACAO = 1 AND con.vencimento<=0";
 
    $result = $this->conexao->query($SQL);
 

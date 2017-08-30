@@ -48,7 +48,7 @@
                         <?php 
                          $aluno = new ClassAluno();
                          
-                         if(isset($_GET['p']))
+                         if(isset($_GET['p']) && is_numeric($_GET['p']) )
                              $pagina=$_GET['p']; 
                            else 
                             $pagina=1;

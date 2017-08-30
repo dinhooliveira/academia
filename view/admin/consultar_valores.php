@@ -195,7 +195,12 @@
                 <td><b><?=$situacao?></b></td>
                 <td><?=$row['vencimento']?></td>
                 <td><a href="?pagina=historico-pagamento&id=<?=$row['COD_CONTRATO']?>">Detalhes</a></td>
-            </tr>
+               <?php if ($row['vencimento'] <= 0): ?>
+                <form method="post">
+                <td><button type="submit" class="btn btn-primary" name="inativar" value="<?=$row['COD_CONTRATO']?>">Inativar contrato</button></td>
+                </form>
+                <?php endif; ?>
+             </tr>
 
         <?php endwhile;?>
            </tbody>
@@ -210,6 +215,10 @@
                  $classpagamentos = new ClassPagamentos();
                  //$classpagamentos->gerarPagamentoALunoTrimestral();
                  $ClassConsulta->relatorioAcadmia();
+                 
+                 $contrato = new ClassContrato();
+                  if(isset($_POST['inativar']))
+                             $contrato->AtivarContrato($_POST['inativar'],1);
            ?>
 </div>
 </div>

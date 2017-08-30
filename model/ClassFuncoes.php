@@ -226,7 +226,7 @@ class ClassFuncoes {
         ."&phone=".$celular;
          
          echo $post;
-        curl_setopt($ch, CURLOPT_URL, "https://leadlovers.com/Pages/Index/122394/");
+        curl_setopt($ch, CURLOPT_URL, "https://leadlovers.com/Pages/Index/12239");
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
 // in real life you should use something like:
@@ -239,11 +239,11 @@ class ClassFuncoes {
         curl_close($ch);
 
 // further processing ....
-    var_dump($server_output);
+    //var_dump($server_output);
         if ($server_output == "OK") {
-            echo 'enviou';
+            return true;
         } else {
-            echo 'não enviou';
+             return false;
         }
 
         return $server_output . $post;
