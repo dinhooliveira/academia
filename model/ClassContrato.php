@@ -2,7 +2,7 @@
 
 class ClassContrato extends ClassConexao {
 
-    function CadastrarContrato($alunoID, $servicoID, $dataVencimento, $cpf, $academiaID, $seg, $ter, $qua, $qui, $sex, $sab, $hor, $ob) {
+    function CadastrarContrato($alunoID, $servicoID, $dataVencimento, $cpf, $academiaID, $seg, $ter, $qua, $qui, $sex, $sab, $hor, $ob,$dep) {
 
         $funcao = new ClassFuncoes();
         $pagamento = new ClassPagamentos();
@@ -23,7 +23,7 @@ class ClassContrato extends ClassConexao {
                 $codigo = $funcao->GerarCodigo($alunoID, $cpf, $data);
 
                 $agora = date("Y-m-d H:i:s");
-                $sql = "INSERT INTO contrato(COD_CONTRATO,ID_ALUNO,ID_ACADEMIA,ID_SERVICO,STATUS,DATA_VENC,ATUALIZACAO,OBSERVACAO) VALUES ('" . $codigo . "','" . $alunoID . "','" . $academiaID . "','" . $servicoID . "',1,'" . $dataVencimento . "','" . $agora . "','" . $ob . "')";
+                $sql = "INSERT INTO contrato(COD_CONTRATO,ID_ALUNO,ID_ACADEMIA,ID_SERVICO,STATUS,DATA_VENC,ATUALIZACAO,OBSERVACAO,ID_DEPENDENTE) VALUES ('" . $codigo . "','" . $alunoID . "','" . $academiaID . "','" . $servicoID . "',1,'" . $dataVencimento . "','" . $agora . "','" . $ob . "','".$dep."')";
 
                 $result = $this->conexao->query($sql);
 
@@ -49,12 +49,36 @@ class ClassContrato extends ClassConexao {
         }
     }
 
-    function ListarContrato($pagina, $consulta) {
+    function ListarContrato($pagina, $consulta='') {
         $funcao = new ClassFuncoes();
 
-        $SQL = "SELECT  contrato.COD_CONTRATO,academia.NOME AS ACADEMIA,aluno.NOME,aluno.CPF,servico.TIPO,servico.DESCRICAO,servico.VALOR FROM academia,servico,aluno,contrato WHERE (aluno.ID_ALUNO=contrato.ID_ALUNO and servico.ID_SERVICO=contrato.ID_SERVICO and academia.ID_ACADEMIA=contrato.ID_ACADEMIA) and (aluno.NOME LIKE '%" . $consulta . "%' or aluno.CPF LIKE '%" . $consulta . "%' or servico.DESCRICAO LIKE '%" . $consulta . "%' or servico.TIPO LIKE '%" . $consulta . "%' or academia.BAIRRO LIKE '%" . $consulta . "%' or academia.NOME LIKE '%" . $consulta . "%')";
+        $SQL =  "SELECT 
+                contrato.COD_CONTRATO,
+                contrato.STATUS ,
+                contrato.ACEITO ,
+                academia.NOME AS ACADEMIA,
+                academia.BAIRRO,
+                IF(contrato.ID_DEPENDENTE > 0 , dependente.NOME , aluno.NOME) AS ALUNO,
+                aluno.CPF ,
+                servico.TIPO ,
+                servico.DESCRICAO ,
+                servico.VALOR
+                FROM 
+                contrato
+                LEFT JOIN academia ON academia.ID_ACADEMIA = contrato.ID_ACADEMIA
+                LEFT JOIN aluno ON aluno.ID_ALUNO = contrato.ID_ALUNO
+                LEFT JOIN dependente ON dependente.id = contrato.ID_DEPENDENTE
+                LEFT JOIN servico ON servico.ID_SERVICO = contrato.ID_SERVICO
+                HAVING
+                ALUNO LIKE '%".$consulta."%' 
+                OR CPF LIKE '%".$consulta."%'
+                OR DESCRICAO LIKE '%".$consulta."%'
+                OR TIPO LIKE '%".$consulta."%' 
+                OR BAIRRO LIKE '%".$consulta."%' 
+                OR ACADEMIA LIKE '%".$consulta."%'";
+                
 
-        $result = $this->conexao->query($SQL);
+        $result = $this->conexao->query($SQL);   
         if (!$result) {
             $this->conexao->error;
         } else {
@@ -73,11 +97,34 @@ class ClassContrato extends ClassConexao {
             $inicio = ($registros * $pagina) - $registros;
 
             //seleciona os itens por página
-            $SQL = "SELECT contrato.ACEITO, aluno.ID_ALUNO,contrato.STATUS,academia.BAIRRO,contrato.COD_CONTRATO,academia.NOME AS ACADEMIA,aluno.NOME,aluno.CPF,servico.TIPO,servico.DESCRICAO,servico.VALOR FROM academia,servico,aluno,contrato where (aluno.ID_ALUNO=contrato.ID_ALUNO and servico.ID_SERVICO=contrato.ID_SERVICO and academia.ID_ACADEMIA=contrato.ID_ACADEMIA) and (aluno.NOME LIKE '%" . $consulta . "%' or aluno.CPF LIKE '%" . $consulta . "%' or servico.DESCRICAO LIKE '%" . $consulta . "%' or servico.TIPO LIKE '%" . $consulta . "%' or academia.BAIRRO LIKE '%" . $consulta . "%' or academia.NOME LIKE '%" . $consulta . "%') limit " . $inicio . "," . $registros . "";
+            $SQL = "SELECT  
+                    contrato.COD_CONTRATO ,
+                    contrato.STATUS ,
+                    contrato.ACEITO ,
+                    academia.NOME AS ACADEMIA,
+                    academia.BAIRRO,
+                    IF( contrato.ID_DEPENDENTE > 0 , dependente.NOME , aluno.NOME ) AS ALUNO,
+                    aluno.CPF,
+                    servico.TIPO,
+                    servico.DESCRICAO,
+                    servico.VALOR
+                    FROM 
+                    contrato
+                    LEFT JOIN academia ON academia.ID_ACADEMIA = contrato.ID_ACADEMIA
+                    LEFT JOIN aluno ON aluno.ID_ALUNO = contrato.ID_ALUNO
+                    LEFT JOIN dependente ON dependente.id = contrato.ID_DEPENDENTE
+                    LEFT JOIN servico ON servico.ID_SERVICO = contrato.ID_SERVICO
+                    HAVING
+                    ALUNO LIKE '%".$consulta."%' 
+                    OR CPF LIKE '%".$consulta."%'
+                    OR DESCRICAO LIKE '%".$consulta."%'
+                    OR TIPO LIKE '%".$consulta."%' 
+                    OR BAIRRO LIKE '%".$consulta."%' 
+                    OR ACADEMIA LIKE '%".$consulta."%' limit ".$inicio.",".$registros.";";
             $result = $this->conexao->query($SQL);
             if (!$result)
                 $funcao->msg('error', $this->conexao->error);
-            else
+            else{
                 $total = $result->num_rows;
 
 
@@ -87,7 +134,7 @@ class ClassContrato extends ClassConexao {
             while ($row = $result->fetch_assoc()) { /* var_dump($row); */
 
                 echo"<form method='post'>";
-                echo"<div class='list-group'><li href='#' class='list-group-item '><b>ALUNO:</b> " . $row['NOME'];
+                echo"<div class='list-group'><li href='#' class='list-group-item '><b>ALUNO:</b> " . $row['ALUNO'];
                 echo"<b> CPF:</b> " . $row['CPF'];
                 echo"<b> ACADEMIA:</b> " . $row['ACADEMIA'];
                 echo"<b> BAIRRO:</b> " . $row['BAIRRO'];
@@ -134,6 +181,7 @@ class ClassContrato extends ClassConexao {
 
             echo"</ul>";
             echo"</nav>";
+            }
         }
     }
 
