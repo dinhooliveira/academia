@@ -52,23 +52,30 @@
                         <input type="hidden" name="id" value="<?php if(isset($_GET['id'])) echo $_GET['id'];?>" >
                          <input type="hidden" name="cpf" value="<?php if(isset($dados['CPF'])) echo $dados['CPF'];?>" >
                     
-                    <!--<div class="col-md-6">
+                    <div class="col-md-6">
                            <div class="form-group">
-                                <label>Aluno</label>
-                                <select class="form-control" name="aluno" id="tipo" required>
-                                    
+                                <label>Dependente</label>
+                                <select class="form-control" name="dependente" id="tipo" required>
+                                    <option value="0">--</option>
 
                                    <?php
-                                     /*$contrato->GetAluno();*/
+                                     $id_aluno = (!empty($_GET['id'])?$_GET['id']:null);
+                                     $dep = $aluno->dependentes($id_aluno);
+                                     if(!empty($dep)) :
+                                     while($row= $dep->fetch_assoc()){
+                                     
                                    ?>
-                                  
+                                    <option value="<?=$row['id']?>"><?=$row['nome']?></option>
+                                   <?php
+                                    }
+                                   endif;
+                                   ?>
                                   
                                  </select>
                             </div>
-                    </div>-->
+                    </div>
                     
-                   
-                    
+               
                     <div class="col-md-6">
                            <div class="form-group">
                                 <label>Serviço</label>
@@ -188,7 +195,7 @@
              if(!isset($_POST['sex']))$_POST['sex']=0;
              if(!isset($_POST['sab']))$_POST['sab']=0;
              
-             $contrato->CadastrarContrato($_POST['id'], $_POST['servicos'], $_POST['vencimento'], $_POST['cpf'],$_POST['academia'],$_POST['seg'],$_POST['ter'],$_POST['qua'],$_POST['qui'],$_POST['sex'],$_POST['sab'],$_POST['horario'],$_POST['observacao']);
+             $contrato->CadastrarContrato($_POST['id'],$_POST['servicos'], $_POST['vencimento'], $_POST['cpf'],$_POST['academia'],$_POST['seg'],$_POST['ter'],$_POST['qua'],$_POST['qui'],$_POST['sex'],$_POST['sab'],$_POST['horario'],$_POST['observacao'],$_POST['dependente']);
              }
             ?>
                         

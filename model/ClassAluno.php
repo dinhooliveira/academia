@@ -131,6 +131,7 @@ class ClassAluno extends ClassConexao {
                 echo "<a href='?pagina=atualizar-aluno&id=" . $row['ID_ALUNO'] . "' class='btn btn-primary'>Editar</a>";
                 echo "<a href='?pagina=cadastrar-contrato&id=" . $row['ID_ALUNO'] . "' class='btn btn-success'>Gerar contrato</a>";
                 echo "<a href='?pagina=cadastrar-dependente&id={$row['ID_ALUNO']}' class='btn btn-success glyphicon glyphicon-plus'> Dependente</a>";
+                echo "<a href='?pagina=ver-dependente&id={$row['ID_ALUNO']}' class='btn btn-success glyphicon glyphicon-eye-open'> Dependente</a>";
                 echo"</div></form>";
             }
 
@@ -156,10 +157,22 @@ class ClassAluno extends ClassConexao {
         }
     }
     
-    function ListarDependente($pagina, $consulta) {
+    function dependentes($id=null)
+    {
+        $SQL = "SELECT * FROM dependente WHERE ID_ALUNO=" . $id . "";
+        
+        $result = $this->conexao->query($SQL);
+        if ($result)
+            return $result;
+        else
+            echo msg('error', $this->conexao->error);
+        return false;
+    }
+    
+    function ListarDependente($pagina, $consulta,$id) {
         $funcao = new ClassFuncoes();
         
-        $SQL = "SELECT * FROM dependente where(NOME LIKE '%" . $consulta . "%')";
+        $SQL = "SELECT * FROM dependente where(NOME LIKE '%" . $consulta . "%') AND id_aluno={$id}";
 
         $result = $this->conexao->query($SQL);
         if (!$result) {
@@ -178,7 +191,7 @@ class ClassAluno extends ClassConexao {
             $inicio = ($registros * $pagina) - $registros;
 
             //seleciona os itens por página
-            $SQL = "SELECT * FROM dependente where (NOME LIKE '%" . $consulta . "%') limit " . $inicio . "," . $registros . "";
+            $SQL = "SELECT * FROM dependente where (NOME LIKE '%" . $consulta . "%') AND id_aluno={$id} limit " . $inicio . "," . $registros . "";
             $result = $this->conexao->query($SQL);
             if (!$result)
                 $funcao->msg('error', $this->conexao->error);
@@ -217,9 +230,9 @@ class ClassAluno extends ClassConexao {
             for ($i = 1; $i < $numPaginas + 1; $i++) {
 
                 if ($i == $pagina)
-                    echo "<li class='active'><a href='?pagina=consultar-aluno&p=$i'>" . $i . "</li></a> ";
+                    echo "<li class='active'><a href='?pagina=ver-dependente&p={$i}&id={$id}'>" . $i . "</li></a> ";
                 else
-                    echo "<li><a href='?pagina=consultar-aluno&p=$i'>" . $i . "</li></a> ";
+                    echo "<li><a href='?pagina=ver-dependente&p={$i}&id={$id}'>" . $i . "</li></a> ";
             }
 
 

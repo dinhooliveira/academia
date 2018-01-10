@@ -2,7 +2,7 @@
 
 class ClassContrato extends ClassConexao {
 
-    function CadastrarContrato($alunoID, $servicoID, $dataVencimento, $cpf, $academiaID, $seg, $ter, $qua, $qui, $sex, $sab, $hor, $ob,$dep) {
+    function CadastrarContrato($alunoID,$servicoID, $dataVencimento, $cpf, $academiaID, $seg, $ter, $qua, $qui, $sex, $sab, $hor, $ob,$dep) {
 
         $funcao = new ClassFuncoes();
         $pagamento = new ClassPagamentos();
@@ -23,7 +23,7 @@ class ClassContrato extends ClassConexao {
                 $codigo = $funcao->GerarCodigo($alunoID, $cpf, $data);
 
                 $agora = date("Y-m-d H:i:s");
-                $sql = "INSERT INTO contrato(COD_CONTRATO,ID_ALUNO,ID_ACADEMIA,ID_SERVICO,STATUS,DATA_VENC,ATUALIZACAO,OBSERVACAO,ID_DEPENDENTE) VALUES ('" . $codigo . "','" . $alunoID . "','" . $academiaID . "','" . $servicoID . "',1,'" . $dataVencimento . "','" . $agora . "','" . $ob . "','".$dep."')";
+                $sql = "INSERT INTO contrato(COD_CONTRATO,ID_ALUNO,ID_ACADEMIA,ID_SERVICO,STATUS,DATA_VENC,ATUALIZACAO,OBSERVACAO,ID_DEPENDENTE) VALUES ('" . $codigo . "','" . $alunoID . "', '" . $academiaID . "','" . $servicoID . "',1,'" . $dataVencimento . "','" . $agora . "','" . $ob . "','".$dep."')";
 
                 $result = $this->conexao->query($sql);
 

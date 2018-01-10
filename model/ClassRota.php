@@ -66,7 +66,14 @@ class ClassRota {
                 include("view/admin/footer.php");
 
                 break;
-
+            
+            case"ver-dependente":
+                $login->seguranca();
+                include("view/admin/header.php");
+                include("view/admin/menu.php");
+                include("view/admin/consultar_depedente.php");
+                include("view/admin/footer.php");
+                break;
 
             case"consultar-aluno":
                 $login->seguranca();
