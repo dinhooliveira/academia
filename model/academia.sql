@@ -24,14 +24,14 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `academia` (
   `ID_ACADEMIA` int(11) NOT NULL,
-  `NOME` varchar(100) CHARACTER SET latin1 NOT NULL,
-  `CEP` varchar(8) CHARACTER SET latin1 NOT NULL,
-  `LOGRADOURO` varchar(100) CHARACTER SET latin1 NOT NULL,
+  `NOME` varchar(100) NOT NULL,
+  `CEP` varchar(8) NOT NULL,
+  `LOGRADOURO` varchar(100) NOT NULL,
   `NUMERO` int(9) NOT NULL,
-  `COMPLEMENTO` varchar(100) CHARACTER SET latin1 NOT NULL,
-  `BAIRRO` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `CIDADE` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `UF` varchar(2) CHARACTER SET latin1 NOT NULL,
+  `COMPLEMENTO` varchar(100) NOT NULL,
+  `BAIRRO` varchar(50) NOT NULL,
+  `CIDADE` varchar(50) NOT NULL,
+  `UF` varchar(2) NOT NULL,
   `STATUS` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -41,7 +41,7 @@ CREATE TABLE `academia` (
 
 INSERT INTO `academia` (`ID_ACADEMIA`, `NOME`, `CEP`, `LOGRADOURO`, `NUMERO`, `COMPLEMENTO`, `BAIRRO`, `CIDADE`, `UF`, `STATUS`) VALUES
 (1, 'BOREFIT', '21531710', 'Rua Wilson', 30, 'BLOCO X', 'Coelho Neto', 'Rio de Janeiro', 'RJ', 1),
-(2, 'FITNESS TOP', '21531710', 'Rua Justino de AraÃºjo', 300, '', 'Padre Miguel', 'Rio de Janeiro', 'RJ', 1);
+(2, 'FITNESS TOP', '21531710', 'Rua Justino de Araujo', 300, '', 'Padre Miguel', 'Rio de Janeiro', 'RJ', 1);
 
 -- --------------------------------------------------------
 
@@ -51,21 +51,21 @@ INSERT INTO `academia` (`ID_ACADEMIA`, `NOME`, `CEP`, `LOGRADOURO`, `NUMERO`, `C
 
 CREATE TABLE `aluno` (
   `ID_ALUNO` int(9) NOT NULL,
-  `NOME` varchar(100) CHARACTER SET latin1 NOT NULL,
+  `NOME` varchar(100) NOT NULL,
   `DATA_NASC` date NOT NULL,
-  `CEP` varchar(8) CHARACTER SET latin1 NOT NULL,
-  `LOGRADOURO` varchar(100) CHARACTER SET latin1 NOT NULL,
+  `CEP` varchar(8) NOT NULL,
+  `LOGRADOURO` varchar(100) NOT NULL,
   `NUMERO` int(11) NOT NULL,
-  `COMPLEMENTO` varchar(100) CHARACTER SET latin1 NOT NULL,
-  `BAIRRO` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `CIDADE` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `UF` varchar(2) CHARACTER SET latin1 NOT NULL,
+  `COMPLEMENTO` varchar(100) NOT NULL,
+  `BAIRRO` varchar(50) NOT NULL,
+  `CIDADE` varchar(50) NOT NULL,
+  `UF` varchar(2) NOT NULL,
   `DATA_INSCR` date NOT NULL,
-  `CPF` varchar(11) CHARACTER SET latin1 NOT NULL,
-  `RG` varchar(15) CHARACTER SET latin1 DEFAULT NULL,
-  `EMAIL` varchar(250) CHARACTER SET latin1 NOT NULL,
-  `CELULAR` varchar(15) CHARACTER SET latin1 NOT NULL,
-  `foto` varchar(250) CHARACTER SET latin1 DEFAULT NULL
+  `CPF` varchar(11) NOT NULL,
+  `RG` varchar(15) DEFAULT NULL,
+  `EMAIL` varchar(250) NOT NULL,
+  `CELULAR` varchar(15) NOT NULL,
+  `foto` varchar(250) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -76,14 +76,14 @@ CREATE TABLE `aluno` (
 --
 
 CREATE TABLE `aula` (
-  `cod_contrato` varchar(200) CHARACTER SET latin1 NOT NULL,
+  `cod_contrato` varchar(200) NOT NULL,
   `seg` int(1) NOT NULL,
   `ter` int(1) NOT NULL,
   `qua` int(1) NOT NULL,
   `qui` int(1) NOT NULL,
   `sex` int(1) NOT NULL,
   `sab` int(1) NOT NULL,
-  `horario` varchar(100) CHARACTER SET latin1 NOT NULL
+  `horario` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -95,14 +95,15 @@ CREATE TABLE `aula` (
 --
 
 CREATE TABLE `contrato` (
-  `COD_CONTRATO` varchar(50) CHARACTER SET latin1 NOT NULL,
+  `COD_CONTRATO` varchar(50) NOT NULL,
   `ID_ALUNO` int(9) NOT NULL,
   `ID_ACADEMIA` int(9) NOT NULL,
+  `ID_DEPENDENTE` int(9) NOT NULL,
   `ID_SERVICO` int(9) NOT NULL,
-  `STATUS` int(1) NOT NULL,
+  `STATUS` int(1) NOT NULL DEFAULT 0,
   `DATA_VENC` int(11) NOT NULL,
   `ATUALIZACAO` datetime NOT NULL,
-  `OBSERVACAO` varchar(250) CHARACTER SET latin1 NOT NULL,
+  `OBSERVACAO` varchar(250) NOT NULL,
   `ACEITO` int(1) NOT NULL,
   `IP` varchar(30) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -133,10 +134,10 @@ CREATE TABLE `dependente` (
 
 CREATE TABLE `login` (
   `ID` int(9) NOT NULL,
-  `CPF` varchar(11) CHARACTER SET latin1 NOT NULL,
-  `NOME` varchar(100) CHARACTER SET latin1 NOT NULL,
-  `EMAIL` varchar(100) CHARACTER SET latin1 NOT NULL,
-  `SENHA` varchar(100) CHARACTER SET latin1 NOT NULL
+  `CPF` varchar(11) NOT NULL,
+  `NOME` varchar(100) NOT NULL,
+  `EMAIL` varchar(100) NOT NULL,
+  `SENHA` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -154,7 +155,7 @@ INSERT INTO `login` (`ID`, `CPF`, `NOME`, `EMAIL`, `SENHA`) VALUES
 
 CREATE TABLE `pagamentos` (
   `ID_PAGAMENTO` int(11) NOT NULL,
-  `COD_CONTRATO` varchar(50) CHARACTER SET latin1 NOT NULL,
+  `COD_CONTRATO` varchar(50) NOT NULL,
   `DATA_PAG` date NOT NULL,
   `DATA_VENC` date NOT NULL,
   `STATUS` int(11) NOT NULL,
@@ -178,7 +179,7 @@ CREATE TABLE `servico` (
   `DESCRICAO` varchar(250) NOT NULL,
   `VALOR` float NOT NULL,
   `STATUS` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Extraindo dados da tabela `servico`
@@ -283,3 +284,5 @@ ALTER TABLE `pagamentos`
 --
 ALTER TABLE `servico`
   MODIFY `ID_SERVICO` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;COMMIT;
+
+SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));

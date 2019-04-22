@@ -39,7 +39,7 @@ class ClassAluno extends ClassConexao {
         }
     }
     
-       function CadastrarDependente($nome, $nascimento,$inscricao,$responsavel,$foto=null) {
+    function CadastrarDependente($nome, $nascimento,$inscricao,$responsavel,$foto=null) {
 
         $funcao = new ClassFuncoes();
         $classUpload = new ClassUpload();
@@ -104,35 +104,35 @@ class ClassAluno extends ClassConexao {
             while ($row = $result->fetch_assoc()) { /* var_dump($row); */
                 echo"<form method='post'>";
                 
-                echo"<div class='list-group'>"
-                . "<a href='#' class='list-group-item active'>"
+                echo"<ul class='list-group'>"
+                . "<li href='#' class='list-group-item active'>"
                 ."<img style='width:10%; hight:10%; border-radius:50px;'  src='";
                 if($row['foto']!="") 
                     echo"view/upload/".$row['foto']; 
                 else 
                     echo"view/upload/semfoto.png" ;
                 echo"' alt='...'>";
-                echo"   <b style='font-size:200%'> " . $row['NOME'] . "</b></a>";
-                echo"<a href='#' class='list-group-item'><b>CPF:</b> " . $row['CPF'] . "</a>";
-                echo"<a href='#' class='list-group-item'><b>RG:</b> " . $row['RG'] . "</a>";
+                echo"   <b style='font-size:200%'> " . $row['NOME'] . "</b></li>";
+                echo"<li href='#' class='list-group-item'><b>CPF:</b> " . $row['CPF'] . "</li>";
+                echo"<li href='#' class='list-group-item'><b>RG:</b> " . $row['RG'] . "</li>";
                 $date = date_create($row['DATA_NASC']);
-                echo"<a href='#' class='list-group-item'><b>NASCIMENTO : </b> " . date_format($date, 'd-m-Y');
+                echo"<li href='#' class='list-group-item'><b>NASCIMENTO : </b> " . date_format($date, 'd-m-Y');
                 $date = date_create($row['DATA_INSCR']);
                 echo" <b>DATA INSCRIÇÃO : </b>" . date_format($date, 'd-m-Y') . "</a>";
-                echo"<a href='#' class='list-group-item'><b>CEP:</b> " . $row['CEP'];
+                echo"<li href='#' class='list-group-item'><b>CEP:</b> " . $row['CEP'];
                 echo" <b>LOGRADOURO:</b> " . $row['LOGRADOURO'];
                 echo" <b>NUMERO:</b> " . $row['NUMERO'];
                 echo" <b>COMPLEMENTO:</b> " . $row['COMPLEMENTO'];
                 echo" <b>BAIRRO:</b> " . $row['BAIRRO'];
                 echo" <b>CIDADE:</b> " . $row['CIDADE'];
                 echo" <b>UF:</b> " . $row['UF'] . "</a>";
-
-
+                echo "<li href='' class='list-group-item '>";
                 echo "<a href='?pagina=atualizar-aluno&id=" . $row['ID_ALUNO'] . "' class='btn btn-primary'>Editar</a>";
                 echo "<a href='?pagina=cadastrar-contrato&id=" . $row['ID_ALUNO'] . "' class='btn btn-success'>Gerar contrato</a>";
                 echo "<a href='?pagina=cadastrar-dependente&id={$row['ID_ALUNO']}' class='btn btn-success glyphicon glyphicon-plus'> Dependente</a>";
                 echo "<a href='?pagina=ver-dependente&id={$row['ID_ALUNO']}' class='btn btn-success glyphicon glyphicon-eye-open'> Dependente</a>";
-                echo"</div></form>";
+                echo "</li>";
+                echo"</ul></form>";
             }
 
 

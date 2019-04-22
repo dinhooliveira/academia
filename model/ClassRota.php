@@ -1,8 +1,10 @@
 <?php
 
-class ClassRota {
+class ClassRota
+{
 
-    public function Paginacao() {
+    public function Paginacao()
+    {
 
         $login = new ClassLogin();
 
@@ -17,47 +19,48 @@ class ClassRota {
             case "login":
                 include("view/login/login.php");
                 break;
-            
+
             case"admin":
                 $login->seguranca();
                 include("view/admin/header.php");
                 include("view/admin/menu.php");
-                include("view/admin/consultar_valores.php");
+                include("view/admin/dashboard/consultar_valores.php");
                 include("view/admin/footer.php");
                 break;
-            
-             case"alunos-em-dia":
+
+            case"alunos-em-dia":
                 $login->seguranca();
                 include("view/admin/header.php");
                 include("view/admin/menu.php");
-                include("view/admin/consultar_em_dia.php");
+                include("view/admin/dashboard/consultar_em_dia.php");
                 include("view/admin/footer.php");
                 break;
-            
+
             case"alunos-a-vencer":
                 $login->seguranca();
                 include("view/admin/header.php");
                 include("view/admin/menu.php");
-                include("view/admin/consultar_em_vencer.php");
+                include("view/admin/dashboard/consultar_em_vencer.php");
                 include("view/admin/footer.php");
                 break;
-            
+
             case"alunos-em-atraso":
                 $login->seguranca();
                 include("view/admin/header.php");
                 include("view/admin/menu.php");
-                include("view/admin/consultar_em_atraso.php");
+                include("view/admin/dashboard/consultar_em_atraso.php");
                 include("view/admin/footer.php");
                 break;
+
             case"cadastrar-aluno":
                 $login->seguranca();
                 include("view/admin/header.php");
                 include("view/admin/menu.php");
-                include("view/admin/cadastrar_aluno.php");
+                include("view/admin/aluno/cadastrar_aluno.php");
                 include("view/admin/footer.php");
 
                 break;
-            
+
             case"cadastrar-dependente":
                 $login->seguranca();
                 include("view/admin/header.php");
@@ -66,7 +69,7 @@ class ClassRota {
                 include("view/admin/footer.php");
 
                 break;
-            
+
             case"ver-dependente":
                 $login->seguranca();
                 include("view/admin/header.php");
@@ -79,7 +82,7 @@ class ClassRota {
                 $login->seguranca();
                 include("view/admin/header.php");
                 include("view/admin/menu.php");
-                include("view/admin/consultar_aluno.php");
+                include("view/admin/aluno/consultar_aluno.php");
                 include("view/admin/footer.php");
                 break;
 
@@ -87,14 +90,14 @@ class ClassRota {
                 $login->seguranca();
                 include("view/admin/header.php");
                 include("view/admin/menu.php");
-                include("view/admin/atualizar_aluno.php");
+                include("view/admin/aluno/atualizar_aluno.php");
                 include("view/admin/footer.php");
                 break;
             case"consultar-servico":
                 $login->seguranca();
                 include("view/admin/header.php");
                 include("view/admin/menu.php");
-                include("view/admin/consultar_servico.php");
+                include("view/admin/servico/consultar_servico.php");
                 include("view/admin/footer.php");
                 break;
 
@@ -102,7 +105,7 @@ class ClassRota {
                 $login->seguranca();
                 include("view/admin/header.php");
                 include("view/admin/menu.php");
-                include("view/admin/atualizar_servico.php");
+                include("view/admin/servico/atualizar_servico.php");
                 include("view/admin/footer.php");
                 break;
 
@@ -110,7 +113,7 @@ class ClassRota {
                 $login->seguranca();
                 include("view/admin/header.php");
                 include("view/admin/menu.php");
-                include("view/admin/consultar_academia.php");
+                include("view/admin/academia/consultar_academia.php");
                 include("view/admin/footer.php");
                 break;
 
@@ -118,7 +121,7 @@ class ClassRota {
                 $login->seguranca();
                 include("view/admin/header.php");
                 include("view/admin/menu.php");
-                include("view/admin/cadastrar_academia.php");
+                include("view/admin/academia/cadastrar_academia.php");
                 include("view/admin/footer.php");
 
                 break;
@@ -127,7 +130,7 @@ class ClassRota {
                 $login->seguranca();
                 include("view/admin/header.php");
                 include("view/admin/menu.php");
-                include("view/admin/atualizar_academia.php");
+                include("view/admin/academia/atualizar_academia.php");
                 include("view/admin/footer.php");
                 break;
 
@@ -144,7 +147,7 @@ class ClassRota {
                 $login->seguranca();
                 include("view/admin/header.php");
                 include("view/admin/menu.php");
-                include("view/admin/cadastrar_contrato.php");
+                include("view/admin/aluno/contrato/cadastrar_contrato.php");
                 include("view/admin/footer.php");
                 break;
 

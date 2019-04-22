@@ -15,6 +15,7 @@ class ClassAulas extends ClassConexao {
 
     function insert_Aulas($cod, $seg, $ter, $qua, $qui, $sex, $sab, $horario) {
         $ClassFuncao = new ClassFuncoes();
+        
         $SQL = "INSERT INTO aula(cod_contrato, seg, ter, qua, qui, sex, sab, horario) values ('" . $cod . "'," . $seg . "," . $ter . "," . $qua . "," . $qui . "," . $sex . "," . $sab . ",'" . $horario . "')";
         if ($this->conexao->query($SQL))
             $ClassFuncao->msg('ok', 'Aula Salva');

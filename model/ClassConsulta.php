@@ -188,7 +188,7 @@ class ClassConsulta extends ClassConexao {
     function get_Qtd_Em_Dia() {
         $result = $this->get_Em_Dia();
         return $result->num_rows;
-        
+
     }
 
     function get_Qtd_Em_Vencer() {
@@ -200,9 +200,10 @@ class ClassConsulta extends ClassConexao {
       $result = $this->get_Em_Atraso();
       return $result->num_rows;
     }
-    
+
     function get_Em_Dia(){
-       $SQL = " SELECT 
+       $SQL = " 
+            SELECT 
                 * FROM
                 (
                     SELECT 
@@ -218,15 +219,18 @@ class ClassConsulta extends ClassConexao {
                      GROUP BY co.COD_CONTRATO
                     )AS con
                 WHERE con.COD_CONTRATO IS NOT NULL AND con.SITUACAO = 1 AND con.vencimento >10";
-       
+
        $result = $this->conexao->query($SQL);
 
-        if (!$result)
+
+        if (!$result){
+            $funcao = new ClassFuncoes();
             $funcao->msg('error', $this->conexao->error);
+        }
         else
           return $result;
     }
-    
+
     function get_Em_Vencer(){
    $SQL = " SELECT 
             * FROM
@@ -252,7 +256,7 @@ class ClassConsulta extends ClassConexao {
     else
       return $result;
 }
-    
+
     function get_Em_Atraso(){
    $SQL = " SELECT 
             * FROM

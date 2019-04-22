@@ -44,7 +44,7 @@
 
                    </div>
                      
-                    <div class="row"> 
+                    <div class="container-fluid" style="max-height: 500px">
                         <?php 
                          $aluno = new ClassAluno();
                          

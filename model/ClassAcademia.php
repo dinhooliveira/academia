@@ -1,8 +1,10 @@
 <?php
 
-class ClassAcademia extends ClassConexao {
+class ClassAcademia extends ClassConexao
+{
 
-    function CadastrarAcademia($nome, $cep, $logradouro, $numero, $complemento, $bairro, $cidade, $uf) {
+    function CadastrarAcademia($nome, $cep, $logradouro, $numero, $complemento, $bairro, $cidade, $uf)
+    {
 
         $funcao = new ClassFuncoes();
         if ($nome == "") {
@@ -22,14 +24,14 @@ class ClassAcademia extends ClassConexao {
                     $funcao->msg('info', 'Nome da academia já possui cadastro');
                 if ($this->conexao->errno != 1062)
                     $funcao->msg('info', $this->conexao->error);
-            }
-            else {
+            } else {
                 $funcao->msg('ok', 'Cadastrado com sussesso');
             }
         }
     }
 
-    function ListarAcademia($pagina, $consulta) {
+    function ListarAcademia($pagina, $consulta)
+    {
         $funcao = new ClassFuncoes();
 
         $SQL = "SELECT * FROM academia where(NOME LIKE '%" . $consulta . "%' or LOGRADOURO LIKE '%" . $consulta . "%' or CIDADE LIKE '%" . $consulta . "%' or BAIRRO LIKE '%" . $consulta . "%' or UF LIKE '%" . $consulta . "%')";
@@ -59,21 +61,19 @@ class ClassAcademia extends ClassConexao {
                 $total = $result->num_rows;
 
 
-
-
-
             while ($row = $result->fetch_assoc()) { /* var_dump($row); */
-                echo"<form method='post'>";
-                echo"<div class='list-group'><a href='#' class='list-group-item active'><b>Nome:</b> " . $row['NOME'] . "</a>";
-                echo"<a href='#' class='list-group-item'><b>CEP:</b> " . $row['CEP'];
-                echo" <b>LOGRADOURO:</b> " . $row['LOGRADOURO'];
-                echo" <b>NUMERO:</b> " . $row['NUMERO'];
-                echo" <b>COMPLEMENTO:</b> " . $row['COMPLEMENTO'];
-                echo" <b>BAIRRO:</b> " . $row['BAIRRO'];
-                echo" <b>CIDADE:</b> " . $row['CIDADE'];
-                echo" <b>UF:</b> " . $row['UF'] . "</a>";
+                echo "<form method='post'>";
+                echo "<ul class='list-group'>";
+                echo "<li href='#' class='list-group-item active'><b>Nome:</b> " . $row['NOME'] . "</li>";
+                echo "<li href='#' class='list-group-item'><b>CEP:</b> " . $row['CEP'];
+                echo " <b>LOGRADOURO:</b> " . $row['LOGRADOURO'];
+                echo " <b>NUMERO:</b> " . $row['NUMERO'];
+                echo " <b>COMPLEMENTO:</b> " . $row['COMPLEMENTO'];
+                echo " <b>BAIRRO:</b> " . $row['BAIRRO'];
+                echo " <b>CIDADE:</b> " . $row['CIDADE'];
+                echo " <b>UF:</b> " . $row['UF'] . "</li>";
 
-
+                echo "<li href='#' class='list-group-item'>";
                 echo "<a href='?pagina=atualizar-academia&id=" . $row['ID_ACADEMIA'] . "' class='btn btn-primary'>Editar</a>";
                 echo "<input type='hidden' name='id' value=" . $row['ID_ACADEMIA'] . " />";
                 echo "<input type='hidden' name='status' value=" . $row['STATUS'] . " />";
@@ -83,13 +83,13 @@ class ClassAcademia extends ClassConexao {
                 else
                     echo "<input type='submit' name='bt_status' value='Desativado' class='btn btn-danger' />";
 
-                echo"</div></form>";
+                echo "</li>";
+                echo "</ul></form>";
             }
 
 
-
-            echo"<nav aria-label='Page navigation'>";
-            echo"<ul class='pagination'>";
+            echo "<nav aria-label='Page navigation'>";
+            echo "<ul class='pagination'>";
 
             //exibe a paginação
             for ($i = 1; $i < $numPaginas + 1; $i++) {
@@ -101,14 +101,13 @@ class ClassAcademia extends ClassConexao {
             }
 
 
-
-
-            echo"</ul>";
-            echo"</nav>";
+            echo "</ul>";
+            echo "</nav>";
         }
     }
 
-    function GetAcademia($id) {
+    function GetAcademia($id)
+    {
         $funcao = new ClassFuncoes();
         $SQL = "SELECT * FROM academia WHERE ID_ACADEMIA=" . $id . "";
 
@@ -119,7 +118,8 @@ class ClassAcademia extends ClassConexao {
             $funcao->msg('error', $this->conexao->error);
     }
 
-    function retun_Academia() {
+    function retun_Academia()
+    {
         $funcao = new ClassFuncoes();
         $SQL = "SELECT * FROM academia ";
 
@@ -130,7 +130,8 @@ class ClassAcademia extends ClassConexao {
             $funcao->msg('error', $this->conexao->error);
     }
 
-    function AtualizarAcademia($id, $nome, $cep, $logradouro, $numero, $complemento, $bairro, $cidade, $uf) {
+    function AtualizarAcademia($id, $nome, $cep, $logradouro, $numero, $complemento, $bairro, $cidade, $uf)
+    {
 
         $funcao = new ClassFuncoes();
         if ($nome == "") {
@@ -154,7 +155,8 @@ class ClassAcademia extends ClassConexao {
         }
     }
 
-    function AtivarAcademia($id, $status) {
+    function AtivarAcademia($id, $status)
+    {
         $funcao = new ClassFuncoes();
         if ($status == 0)
             $status = 1;
@@ -165,10 +167,10 @@ class ClassAcademia extends ClassConexao {
         $result = $this->conexao->query($SQL);
         if ($result) {
             $funcao->msg('ok', ' Status atualizado com sucesso!');
-            echo"<meta http-equiv='refresh' content='1'>";
+            echo "<meta http-equiv='refresh' content='1'>";
         } else {
             $funcao->msg('error', 'Não foi possivel mudar status!' . $this->conexao->error);
-            echo"<meta http-equiv='refresh' content='2'>";
+            echo "<meta http-equiv='refresh' content='2'>";
             //echo $SQL;
         }
     }

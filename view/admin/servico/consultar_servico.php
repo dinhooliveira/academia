@@ -43,15 +43,13 @@
 
         </div>
 
-        <div class="row"> 
+        <div class="container-fluid" style="max-height: 500px">
             <?php
             $servico = new ClassServico();
 
-            if (isset($_GET['p'])) {
+            if (isset($_GET['p']) && is_numeric($_GET['p']) && $_GET['p'] > 0) {
                 $pagina = $_GET['p'];
             } else {
-
-
                 $pagina = 1;
             }
 
