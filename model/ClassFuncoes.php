@@ -181,16 +181,14 @@ class ClassFuncoes {
         }
     }
 
-    function GerarCodigo($id, $cpf, $data) {
+    function GerarCodigo($id, $cpf, $academiaID) {
 
         $pontuacao = array('.', ',', '/', '-');
-        $data = (string) $data;
 
-        $data = str_replace($pontuacao, '', $data);
         $cpf = str_replace($pontuacao, '', $cpf);
 
 
-        $codigo = $id . $cpf . $data;
+        $codigo = $id . $cpf . $academiaID;
         return $codigo;
     }
 
@@ -238,7 +236,6 @@ class ClassFuncoes {
 
         curl_close($ch);
 
-// further processing ....
     //var_dump($server_output);
         if ($server_output == "OK") {
             return true;

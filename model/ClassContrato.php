@@ -26,7 +26,7 @@ class ClassContrato extends ClassConexao
             try {
                 $data = date("d-m-Y");
 
-                $codigo = $funcao->GerarCodigo($alunoID, $cpf, $data);
+                $codigo = $funcao->GerarCodigo($alunoID, $cpf,$academiaID);
 
                 $agora = date("Y-m-d H:i:s");
                 $sql = "INSERT INTO contrato(COD_CONTRATO,ID_ALUNO,ID_ACADEMIA,ID_SERVICO,STATUS,DATA_VENC,ATUALIZACAO,OBSERVACAO,ID_DEPENDENTE) VALUES ('" . $codigo . "','" . $alunoID . "', '" . $academiaID . "','" . $servicoID . "',1,'" . $dataVencimento . "','" . $agora . "','" . $ob . "','" . $dep . "')";
