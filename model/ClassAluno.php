@@ -1,13 +1,15 @@
 <?php
 
-class ClassAluno extends ClassConexao {
+class ClassAluno extends ClassConexao
+{
 
-    function CadastrarAluno($nome, $nascimento, $cep, $logradouro, $numero, $complemento, $bairro, $cidade, $uf, $inscricao, $cpf, $rg, $email, $celular,$foto=null) {
+    function CadastrarAluno($nome, $nascimento, $cep, $logradouro, $numero, $complemento, $bairro, $cidade, $uf, $inscricao, $cpf, $rg, $email, $celular, $foto = null)
+    {
 
         $funcao = new ClassFuncoes();
         $classUpload = new ClassUpload();
-        if($foto!=null) $foto = $classUpload->construtor($foto, 1000,800, "view/upload/");
-      
+        if ($foto != null) $foto = $classUpload->construtor($foto, 1000, 800, "view/upload/");
+
         if ($nome == "") {
             $funcao->msg('error', 'Nome é Obrigatório');
         } else if (!$funcao->validCPF($cpf)) {
@@ -19,58 +21,56 @@ class ClassAluno extends ClassConexao {
         } else if ($logradouro == "" || $bairro == "" || $cidade == "" || $uf == "") {
             $funcao->msg('error', 'Consulte o CEP para preenchimento dos dados de endereço');
         } else {
-            
-            $sql = "INSERT INTO aluno( nome,data_nasc,cep,logradouro,numero,complemento,bairro,cidade,uf,data_inscr,cpf,rg,email,celular,foto) VALUES ('" . addslashes($nome) . "','" . $nascimento . "','" . $cep . "','" . addslashes($logradouro) . "','" . $numero . "','" . $complemento . "','" . $bairro . "','" . $cidade . "','" . $uf . "','" . $inscricao . "','" . $cpf . "','" . $rg . "','" . $email . "','" . $celular . "','".$foto."')";
+
+            $sql = "INSERT INTO aluno( nome,data_nasc,cep,logradouro,numero,complemento,bairro,cidade,uf,data_inscr,cpf,rg,email,celular,foto) VALUES ('" . addslashes($nome) . "','" . $nascimento . "','" . $cep . "','" . addslashes($logradouro) . "','" . $numero . "','" . $complemento . "','" . $bairro . "','" . $cidade . "','" . $uf . "','" . $inscricao . "','" . $cpf . "','" . $rg . "','" . $email . "','" . $celular . "','" . $foto . "')";
             $result = $this->conexao->query($sql);
 
             if (!$result) {
-                if ($this->conexao->errno == 1062)
-                {
+                if ($this->conexao->errno == 1062) {
                     $funcao->msg('info', 'CPF já possui cadastro');
-                   if($foto!=FALSE) unlink("view/upload/".$foto);
-                }else{
-                     $funcao->msg('info', $this->conexao->error);
+                    if ($foto != FALSE) unlink("view/upload/" . $foto);
+                } else {
+                    $funcao->msg('info', $this->conexao->error);
                 }
-            }
-            else {
+            } else {
                 //$funcao->lead($nome, $email, $nascimento, $celular);
                 $funcao->msg('ok', 'Cadastrado com sussesso');
             }
         }
     }
-    
-    function CadastrarDependente($nome, $nascimento,$inscricao,$responsavel,$foto=null) {
+
+    function CadastrarDependente($nome, $nascimento, $inscricao, $responsavel, $foto = null)
+    {
 
         $funcao = new ClassFuncoes();
         $classUpload = new ClassUpload();
-        if($foto!=null) $foto = $classUpload->construtor($foto, 1000,800, "view/upload/");
-      
+        if ($foto != null) $foto = $classUpload->construtor($foto, 1000, 800, "view/upload/");
+
         if ($nome == "") {
             $funcao->msg('error', 'Nome é Obrigatório');
         } else {
-            
-            $sql = "INSERT INTO dependente(nome,nascimento,inscricao,id_aluno,foto) VALUES ('" . addslashes($nome) . "','" . $nascimento . "','" . $inscricao . "',".$responsavel.",'".$foto."')";
+
+            $sql = "INSERT INTO dependente(nome,nascimento,inscricao,id_aluno,foto) VALUES ('" . addslashes($nome) . "','" . $nascimento . "','" . $inscricao . "'," . $responsavel . ",'" . $foto . "')";
             $result = $this->conexao->query($sql);
 
             if (!$result) {
-                if ($this->conexao->errno == 1062)
-                {
+                if ($this->conexao->errno == 1062) {
                     $funcao->msg('info', 'CPF já possui cadastro');
-                   if($foto!=FALSE) unlink("view/upload/".$foto);
-                }else{
-                     $funcao->msg('info', $this->conexao->error);
+                    if ($foto != FALSE) unlink("view/upload/" . $foto);
+                } else {
+                    $funcao->msg('info', $this->conexao->error);
                 }
-            }
-            else {
+            } else {
                 //$funcao->lead($nome, $email, $nascimento, $celular);
                 $funcao->msg('ok', 'Cadastrado com sussesso');
             }
         }
     }
-    
-    function ListarAluno($pagina, $consulta) {
+
+    function ListarAluno($pagina, $consulta)
+    {
         $funcao = new ClassFuncoes();
-        
+
         $SQL = "SELECT * FROM aluno where(NOME LIKE '%" . $consulta . "%' or CPF LIKE '%" . $consulta . "%' or LOGRADOURO LIKE '%" . $consulta . "%' or CIDADE LIKE '%" . $consulta . "%' or BAIRRO LIKE '%" . $consulta . "%' or UF LIKE '%" . $consulta . "%')";
 
         $result = $this->conexao->query($SQL);
@@ -98,47 +98,44 @@ class ClassAluno extends ClassConexao {
                 $total = $result->num_rows;
 
 
-
-
-
             while ($row = $result->fetch_assoc()) { /* var_dump($row); */
-                echo"<form method='post'>";
-                
-                echo"<ul class='list-group'>"
-                . "<li href='#' class='list-group-item active'>"
-                ."<img style='width:10%; hight:10%; border-radius:50px;'  src='";
-                if($row['foto']!="") 
-                    echo"view/upload/".$row['foto']; 
-                else 
-                    echo"view/upload/semfoto.png" ;
-                echo"' alt='...'>";
-                echo"   <b style='font-size:200%'> " . $row['NOME'] . "</b></li>";
-                echo"<li href='#' class='list-group-item'><b>CPF:</b> " . $row['CPF'] . "</li>";
-                echo"<li href='#' class='list-group-item'><b>RG:</b> " . $row['RG'] . "</li>";
+                echo "<form method='post'>";
+
+                echo "<ul class='list-group'>"
+                    . "<li style='padding:5px;list-style-type:none;'>"
+                    . "<img  style='border:4px #337ab7 solid;' width='150'  src='";
+                if ($row['foto'] != "")
+                    echo "view/upload/" . $row['foto'];
+                else
+                    echo "view/upload/semfoto.png";
+                echo "' alt='...'>";
+                echo "</li>";
+                echo "<li href='#' class='list-group-item'><b>NOME:</b> " . $row['NOME'] . "</li>";
+                echo "<li href='#' class='list-group-item'><b>CPF:</b> " . $row['CPF'] . "</li>";
+                echo "<li href='#' class='list-group-item'><b>RG:</b> " . $row['RG'] . "</li>";
                 $date = date_create($row['DATA_NASC']);
-                echo"<li href='#' class='list-group-item'><b>NASCIMENTO : </b> " . date_format($date, 'd-m-Y');
+                echo "<li href='#' class='list-group-item'><b>NASCIMENTO : </b> " . date_format($date, 'd-m-Y');
                 $date = date_create($row['DATA_INSCR']);
-                echo" <b>DATA INSCRIÇÃO : </b>" . date_format($date, 'd-m-Y') . "</a>";
-                echo"<li href='#' class='list-group-item'><b>CEP:</b> " . $row['CEP'];
-                echo" <b>LOGRADOURO:</b> " . $row['LOGRADOURO'];
-                echo" <b>NUMERO:</b> " . $row['NUMERO'];
-                echo" <b>COMPLEMENTO:</b> " . $row['COMPLEMENTO'];
-                echo" <b>BAIRRO:</b> " . $row['BAIRRO'];
-                echo" <b>CIDADE:</b> " . $row['CIDADE'];
-                echo" <b>UF:</b> " . $row['UF'] . "</a>";
+                echo " <b>DATA INSCRIÇÃO : </b>" . date_format($date, 'd-m-Y') . "</a>";
+                echo "<li href='#' class='list-group-item'><b>CEP:</b> " . $row['CEP'];
+                echo " <b>LOGRADOURO:</b> " . $row['LOGRADOURO'];
+                echo " <b>NUMERO:</b> " . $row['NUMERO'];
+                echo " <b>COMPLEMENTO:</b> " . $row['COMPLEMENTO'];
+                echo " <b>BAIRRO:</b> " . $row['BAIRRO'];
+                echo " <b>CIDADE:</b> " . $row['CIDADE'];
+                echo " <b>UF:</b> " . $row['UF'] . "</a>";
                 echo "<li href='' class='list-group-item '>";
                 echo "<a href='?pagina=atualizar-aluno&id=" . $row['ID_ALUNO'] . "' class='btn btn-primary'>Editar</a>";
                 echo "<a href='?pagina=cadastrar-contrato&id=" . $row['ID_ALUNO'] . "' class='btn btn-success'>Gerar contrato</a>";
                 echo "<a href='?pagina=cadastrar-dependente&id={$row['ID_ALUNO']}' class='btn btn-success glyphicon glyphicon-plus'> Dependente</a>";
                 echo "<a href='?pagina=ver-dependente&id={$row['ID_ALUNO']}' class='btn btn-success glyphicon glyphicon-eye-open'> Dependente</a>";
                 echo "</li>";
-                echo"</ul></form>";
+                echo "</ul></form>";
             }
 
 
-
-            echo"<nav aria-label='Page navigation'>";
-            echo"<ul class='pagination'>";
+            echo "<nav aria-label='Page navigation'>";
+            echo "<ul class='pagination'>";
 
             //exibe a paginação
             for ($i = 1; $i < $numPaginas + 1; $i++) {
@@ -150,17 +147,15 @@ class ClassAluno extends ClassConexao {
             }
 
 
-
-
-            echo"</ul>";
-            echo"</nav>";
+            echo "</ul>";
+            echo "</nav>";
         }
     }
-    
-    function dependentes($id=null)
+
+    function dependentes($id = null)
     {
         $SQL = "SELECT * FROM dependente WHERE ID_ALUNO=" . $id . "";
-        
+
         $result = $this->conexao->query($SQL);
         if ($result)
             return $result;
@@ -168,10 +163,11 @@ class ClassAluno extends ClassConexao {
             echo msg('error', $this->conexao->error);
         return false;
     }
-    
-    function ListarDependente($pagina, $consulta,$id) {
+
+    function ListarDependente($pagina, $consulta, $id)
+    {
         $funcao = new ClassFuncoes();
-        
+
         $SQL = "SELECT * FROM dependente where(NOME LIKE '%" . $consulta . "%') AND id_aluno={$id}";
 
         $result = $this->conexao->query($SQL);
@@ -199,32 +195,28 @@ class ClassAluno extends ClassConexao {
                 $total = $result->num_rows;
 
 
-
-
-
             while ($row = $result->fetch_assoc()) { /* var_dump($row); */
-                echo"<form method='post'>";
-                
-                echo"<div class='list-group'>"
-                . "<a href='#' class='list-group-item active'>"
-                ."<img style='width:10%; hight:10%; border-radius:50px;'  src='";
-                if($row['foto']!="") 
-                    echo"view/upload/".$row['foto']; 
-                else 
-                    echo"view/upload/semfoto.png" ;
-                echo"' alt='...'>";
-                echo"   <b style='font-size:200%'> " . $row['nome'] . "</b></a>";
+                echo "<form method='post'>";
+
+                echo "<div class='list-group'>"
+                    . "<a href='#' class='list-group-item active'>"
+                    . "<img style='width:10%; hight:10%; border-radius:50px;'  src='";
+                if ($row['foto'] != "")
+                    echo "view/upload/" . $row['foto'];
+                else
+                    echo "view/upload/semfoto.png";
+                echo "' alt='...'>";
+                echo "   <b style='font-size:200%'> " . $row['nome'] . "</b></a>";
                 $date = date_create($row['nascimento']);
-                echo"<a href='#' class='list-group-item'><b>NASCIMENTO : </b> " . date_format($date, 'd-m-Y');
+                echo "<a href='#' class='list-group-item'><b>NASCIMENTO : </b> " . date_format($date, 'd-m-Y');
                 $date = date_create($row['inscricao']);
-                echo" <b>DATA INSCRIÇÃO : </b>" . date_format($date, 'd-m-Y') . "</a>";
-                echo"</div></form>";
+                echo " <b>DATA INSCRIÇÃO : </b>" . date_format($date, 'd-m-Y') . "</a>";
+                echo "</div></form>";
             }
 
 
-
-            echo"<nav aria-label='Page navigation'>";
-            echo"<ul class='pagination'>";
+            echo "<nav aria-label='Page navigation'>";
+            echo "<ul class='pagination'>";
 
             //exibe a paginação
             for ($i = 1; $i < $numPaginas + 1; $i++) {
@@ -236,14 +228,13 @@ class ClassAluno extends ClassConexao {
             }
 
 
-
-
-            echo"</ul>";
-            echo"</nav>";
+            echo "</ul>";
+            echo "</nav>";
         }
     }
 
-    function GetAluno($id) {
+    function GetAluno($id)
+    {
         $SQL = "SELECT * FROM aluno WHERE ID_ALUNO=" . $id . "";
 
         $result = $this->conexao->query($SQL);
@@ -253,12 +244,13 @@ class ClassAluno extends ClassConexao {
             echo msg('error', $this->conexao->error);
     }
 
-    function AtualizarAluno($id, $nome, $nascimento, $cep, $logradouro, $numero, $complemento, $bairro, $cidade, $uf, $inscricao, $cpf, $rg, $email, $celular,$foto=null,$foto_antiga=null) {
+    function AtualizarAluno($id, $nome, $nascimento, $cep, $logradouro, $numero, $complemento, $bairro, $cidade, $uf, $inscricao, $cpf, $rg, $email, $celular, $foto = null, $foto_antiga = null)
+    {
 
         $funcao = new ClassFuncoes();
         $classUpload = new ClassUpload();
-        if($foto!=null) $foto = $classUpload->construtor($foto, 1000,800, "view/upload/");
-        
+        if ($foto != null) $foto = $classUpload->construtor($foto, 1000, 800, "view/upload/");
+
         if ($nome == "") {
             $funcao->msg('error', 'Nome é Obrigatório');
         } else if (!$funcao->validCPF($cpf)) {
@@ -270,56 +262,56 @@ class ClassAluno extends ClassConexao {
         } else if ($logradouro == "" || $bairro == "" || $cidade == "" || $uf == "") {
             $funcao->msg('error', 'Consulte o CEP para preenchimento dos dados de endereço');
         } else {
-         
-           if($foto==null){
-            $sql = "UPDATE aluno "
-                   . " Set nome='" . $nome 
-                   . "',data_nasc='" . $nascimento 
-                   . "',cep='" . $cep 
-                   . "',logradouro='" . $logradouro 
-                   . "',numero=" . $numero 
-                   . ",complemento='" . $complemento 
-                   . "',bairro='" . $bairro 
-                   . "',cidade='" . $cidade 
-                   . "',uf='" . $uf 
-                   . "',data_inscr='" . $inscricao 
-                   . "',cpf='" . $cpf 
-                   . "',rg='" . $rg 
-                   . "',email='" . $email 
-                   . "',celular='" . $celular 
-                   . "' WHERE ID_ALUNO=" . $id . "";
-            
-            
-           }else{
-               $sql = "UPDATE aluno "
-                      . "SET nome='" . $nome 
-                      . "',data_nasc='" . $nascimento 
-                      . "',cep='" . $cep 
-                      . "',logradouro='" . $logradouro 
-                      . "',numero=" . $numero 
-                      . ",complemento='" . $complemento 
-                      . "',bairro='" . $bairro 
-                      . "',cidade='" . $cidade 
-                      . "',uf='" . $uf 
-                      . "',data_inscr='" . $inscricao 
-                      . "',cpf='" . $cpf 
-                      . "',rg='" . $rg 
-                      . "',email='" . $email 
-                      . "',celular='" . $celular 
-                      . "',foto='" . $foto 
-                      . "' WHERE ID_ALUNO=" . $id . "";
+
+            if ($foto == null) {
+                $sql = "UPDATE aluno "
+                    . " Set nome='" . $nome
+                    . "',data_nasc='" . $nascimento
+                    . "',cep='" . $cep
+                    . "',logradouro='" . $logradouro
+                    . "',numero=" . $numero
+                    . ",complemento='" . $complemento
+                    . "',bairro='" . $bairro
+                    . "',cidade='" . $cidade
+                    . "',uf='" . $uf
+                    . "',data_inscr='" . $inscricao
+                    . "',cpf='" . $cpf
+                    . "',rg='" . $rg
+                    . "',email='" . $email
+                    . "',celular='" . $celular
+                    . "' WHERE ID_ALUNO=" . $id . "";
+
+
+            } else {
+                $sql = "UPDATE aluno "
+                    . "SET nome='" . $nome
+                    . "',data_nasc='" . $nascimento
+                    . "',cep='" . $cep
+                    . "',logradouro='" . $logradouro
+                    . "',numero=" . $numero
+                    . ",complemento='" . $complemento
+                    . "',bairro='" . $bairro
+                    . "',cidade='" . $cidade
+                    . "',uf='" . $uf
+                    . "',data_inscr='" . $inscricao
+                    . "',cpf='" . $cpf
+                    . "',rg='" . $rg
+                    . "',email='" . $email
+                    . "',celular='" . $celular
+                    . "',foto='" . $foto
+                    . "' WHERE ID_ALUNO=" . $id . "";
             }
             $result = $this->conexao->query($sql);
 
             if (!$result) {
-                if($foto!=FALSE) unlink("view/upload/".$foto);
+                if ($foto != FALSE) unlink("view/upload/" . $foto);
                 $funcao->msg('error', 'Não foi possivel atualizar os dados!');
             } else {
-                if($foto_antiga!=null) unlink("view/upload/".$foto_antiga);
+                if ($foto_antiga != null) unlink("view/upload/" . $foto_antiga);
                 $funcao->msg('ok', 'Atualizado com sussesso!');
             }
         }
     }
 
-    
+
 }
