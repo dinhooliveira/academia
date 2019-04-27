@@ -11,7 +11,7 @@
  *
  * @author oliveira
  */
-class ClassAulas extends ClassConexao {
+class ClassAulas extends ClassConfiguracao {
 
     function insert_Aulas($cod, $seg, $ter, $qua, $qui, $sex, $sab, $horario) {
         $ClassFuncao = new ClassFuncoes();

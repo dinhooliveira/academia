@@ -1,19 +1,9 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of ClassPagamentos
- *
  * @author oliveira
  */
-class ClassPagamentos extends ClassConexao {
+class ClassPagamentos extends ClassConfiguracao {
 
-    //put your code here
     //lança as datas de pagamentos mensais na tabela
     //lanca o primeiro pagamento com a data do contrato
     function gerarPagamento($contrato, $data, $data_vencimento, $tipo, $servico, $status) {

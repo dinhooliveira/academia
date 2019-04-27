@@ -6,7 +6,7 @@
 
 <?php
 
-error_reporting(0);
+error_reporting(1);
 
 include_once('model/autoload.php'); 
 

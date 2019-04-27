@@ -24,21 +24,21 @@
                <a href="?pagina=cadastrar-aluno" Class="btn btn-primary">Novo Aluno</a><br><br>
            </div>-->
 
-            <form method="post">
+            <form method="get">
                 <div class="col-md-4">
                     <div class="form-group">
 
-                        <input type="text" class="form-control" name="consulta" placeholder="consulta" maxlength="100" value="<?php if (isset($_POST['consulta'])) echo $_POST['consulta']; ?>" >
+                        <input type="text" class="form-control" name="search" placeholder="consulta" maxlength="100" value="<?php if (isset($_GET['search'])) echo $_GET['search']; ?>" >
 
                     </div>
                 </div>
 
                 <div class="col-md-4">
                     <div class="form-group">
-                        <button type="submit" Class="btn btn-primary" name="bt_consultar" ><span class="glyphicon glyphicon-search"></span>Consultar</button>
+                        <button type="submit" Class="btn btn-primary" ><span class="glyphicon glyphicon-search"></span>Consultar</button>
                     </div>
                 </div>
-
+                <input type="hidden" name="pagina" value="consultar-servico">
             </form>
 
         </div>
@@ -53,12 +53,12 @@
                 $pagina = 1;
             }
 
-            if (isset($_POST['bt_consultar']))
-                $consulta = $_POST['consulta'];
+            if (isset($_GET['search']))
+                $consulta = $_GET['search'];
             else
                 $consulta = "";
 
-            $servico->ListarServico($pagina, $consulta);
+            $servico->ListarServico($pagina, $consulta,'consultar-servico');
 
             if (isset($_POST['bt_status']))
                 $servico->AtivarServicos($_POST['id'], $_POST['status']);

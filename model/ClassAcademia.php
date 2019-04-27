@@ -1,6 +1,6 @@
 <?php
 
-class ClassAcademia extends ClassConexao
+class ClassAcademia extends ClassConfiguracao
 {
 
     function CadastrarAcademia($nome, $cep, $logradouro, $numero, $complemento, $bairro, $cidade, $uf)

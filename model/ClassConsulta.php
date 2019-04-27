@@ -5,7 +5,7 @@
  *
  * @author oliveira
  */
-class ClassConsulta extends ClassConexao {
+class ClassConsulta extends ClassConfiguracao {
     /* retorna o valor total a receber com aluno mensal */
 
     function getValorAlunoMensal() {

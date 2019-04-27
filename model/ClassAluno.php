@@ -1,6 +1,6 @@
 <?php
 
-class ClassAluno extends ClassConexao
+class ClassAluno extends ClassConfiguracao
 {
 
     function CadastrarAluno($nome, $nascimento, $cep, $logradouro, $numero, $complemento, $bairro, $cidade, $uf, $inscricao, $cpf, $rg, $email, $celular, $foto = null)

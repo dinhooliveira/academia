@@ -5,7 +5,7 @@
  *
  * @author oliveira
  */
-class ClassServico extends ClassConexao
+class ClassServico extends ClassConfiguracao
 {
 
     function GetServico($id)
@@ -34,14 +34,14 @@ class ClassServico extends ClassConexao
             $funcao->msg('error', $this->conexao->error);
     }
 
-    function ListarServico($pagina=1, $consulta="")
+    function ListarServico($pagina = 1, $consulta = "", $paramPag)
     {
         $funcao = new ClassFuncoes();
         $porPagina = 5;
-        $offset = (($pagina-1)*$porPagina);
-        $limit  = $offset+$porPagina;
+        $offset = (($pagina - 1) * $porPagina);
+        $limit = $porPagina;
 
-        $SQL = "SELECT SQL_CALC_FOUND_ROWS * FROM servico where (TIPO LIKE '%" . $consulta . "%' or DESCRICAO LIKE '%" . $consulta . "%') LIMIT " . $limit . " OFFSET " . $offset . "";
+        $SQL = "SELECT SQL_CALC_FOUND_ROWS * FROM servico where (TIPO LIKE '%" . $consulta . "%' or DESCRICAO LIKE '%" . $consulta . "%') LIMIT " . $limit . " OFFSET " . $offset;
         $result = $this->conexao->query($SQL);
         if (!$result) {
             $funcao->msg('error', $this->conexao->error);
@@ -50,15 +50,14 @@ class ClassServico extends ClassConexao
             $resultCountRow = $this->conexao->query("SELECT FOUND_ROWS() AS `found_rows`;");
             $total = $resultCountRow->fetch_assoc()["found_rows"];
 
-            $numPaginas = ceil($total /$porPagina);
+            $totalPaginas = ceil($total / $porPagina);
 
-            $inicio = ($offset * $pagina) - $offset;
+            //$inicio = ($offset * $pagina) - $offset;
 
-
-            while ($row = $result->fetch_assoc()) { /* var_dump($row); */
+            while ($row = $result->fetch_assoc()) {
                 echo "<form method='post'>";
                 echo "<div class='list-group'>"
-                    . " <a href=\"#\" class=\"list-group-item active\">{$row['TIPO']}</a>"
+                    . " <a href=\"#\" class=\"list-group-item active\">#{$row['ID_SERVICO']} - {$row['TIPO']}</a>"
                     . "<li href='#' class='list-group-item '>"
                     . $row['DESCRICAO']
                     . "<b>   R$ :</b> " . number_format($row['VALOR'], 2, ',', '.')
@@ -79,21 +78,8 @@ class ClassServico extends ClassConexao
 
             }
 
+            $this->paginacao($pagina, $totalPaginas, $paramPag, $consulta);
 
-            echo "<nav aria-label='Page navigation'>";
-            echo "<ul class='pagination'>";
-
-            //exibe a paginação
-            for ($i = 1; $i < $numPaginas + 1; $i++) {
-
-                if ($i == $pagina)
-                    echo "<li class='active'><a href='?pagina=consultar-servico&p=$i'>" . $i . "</li></a> ";
-                else
-                    echo "<li><a href='?pagina=consultar-servico&p=$i'>" . $i . "</li></a> ";
-            }
-
-            echo "</ul>";
-            echo "</nav>";
 
         }
 
@@ -163,5 +149,6 @@ class ClassServico extends ClassConexao
             $funcao->msg('error', $this->conexao->error);
         }
     }
+
 
 }
