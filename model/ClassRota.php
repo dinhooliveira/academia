@@ -155,7 +155,7 @@ class ClassRota
                 $login->seguranca();
                 include("view/admin/header.php");
                 include("view/admin/menu.php");
-                include("view/admin/atualizar_contrato.php");
+                include("view/admin/contrato/atualizar_contrato.php");
                 include("view/admin/footer.php");
                 break;
 
@@ -171,7 +171,7 @@ class ClassRota
                 $login->seguranca();
                 include("view/admin/header.php");
                 include("view/admin/menu.php");
-                include("view/admin/historico_pagamento.php");
+                include("view/admin/contrato/historico_pagamento.php");
                 include("view/admin/footer.php");
                 break;
 
@@ -179,7 +179,7 @@ class ClassRota
                 $login->seguranca();
                 include("view/admin/header.php");
                 include("view/admin/menu.php");
-                include("view/admin/atualizar_data_aula.php");
+                include("view/admin/contrato/atualizar_data_aula.php");
                 include("view/admin/footer.php");
                 break;
 

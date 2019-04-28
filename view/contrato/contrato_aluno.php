@@ -9,7 +9,7 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <title></title>
         <link href="view/contrato/contrato_style.css" rel="stylesheet">
-        <link href="view/admin/css/bootstrap.min.css" rel="stylesheet">
+        <link href="<?= $config->URL ?>/public/admin/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body>
         

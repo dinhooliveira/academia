@@ -10,7 +10,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#"><!--<img src="./view/admin/img/logo.png"/>--></a>
+                <a class="navbar-brand" href="#"><!--<img src="./<?= $config->URL ?>/public/admin/img/logo.png"/>--></a>
             </div>
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">

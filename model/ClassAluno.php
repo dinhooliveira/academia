@@ -91,9 +91,9 @@ class ClassAluno extends ClassConfiguracao
                     . "<li style='padding:5px;list-style-type:none;'>"
                     . "<img  style='border:4px #337ab7 solid;' width='150'  src='";
                 if ($row['foto'] != "")
-                    echo "view/upload/" . $row['foto'];
+                    echo "{$this->URL}/public/upload/" . $row['foto'];
                 else
-                    echo "view/upload/semfoto.png";
+                    echo "{$this->URL}/public/upload/semfoto.png";
                 echo "' alt='...'>";
                 echo "</li>";
                 echo "<li href='#' class='list-group-item'><b>NOME:</b> " . $row['NOME'] . "</li>";
