@@ -67,38 +67,24 @@ class ClassAluno extends ClassConfiguracao
         }
     }
 
-    function ListarAluno($pagina, $consulta)
+    function ListarAluno($pagina, $consulta,$urlParam)
     {
         $funcao = new ClassFuncoes();
 
-        $SQL = "SELECT * FROM aluno where(NOME LIKE '%" . $consulta . "%' or CPF LIKE '%" . $consulta . "%' or LOGRADOURO LIKE '%" . $consulta . "%' or CIDADE LIKE '%" . $consulta . "%' or BAIRRO LIKE '%" . $consulta . "%' or UF LIKE '%" . $consulta . "%')";
+        $porPagina = 5;
+        $offset = (($pagina - 1) * $porPagina);
+        $limit = $porPagina;
 
+        $SQL = "SELECT SQL_CALC_FOUND_ROWS * FROM aluno WHERE (NOME LIKE '%" . $consulta . "%' or CPF LIKE '%" . $consulta . "%' OR LOGRADOURO LIKE '%" . $consulta . "%' OR CIDADE LIKE '%" . $consulta . "%' OR BAIRRO LIKE '%" . $consulta . "%' or UF LIKE '%" . $consulta . "%') LIMIT " . $limit . "  OFFSET " .$offset ;
         $result = $this->conexao->query($SQL);
         if (!$result) {
-            $this->conexao->error;
+            $funcao->msg('error', $this->conexao->error);
         } else {
-            //conta o total de itens
-            $total = $result->num_rows;
 
-            //seta a quantidade de itens por página, neste caso, 2 itens
-            $registros = 5;
-
-            //calcula o número de páginas arredondando o resultado para cima
-            $numPaginas = ceil($total / $registros);
-
-            //variavel para calcular o início da visualização com base na página atual
-            $inicio = ($registros * $pagina) - $registros;
-
-            //seleciona os itens por página
-            $SQL = "SELECT * FROM aluno where (NOME LIKE '%" . $consulta . "%' or CPF LIKE '%" . $consulta . "%' or LOGRADOURO LIKE '%" . $consulta . "%' or CIDADE LIKE '%" . $consulta . "%' or BAIRRO LIKE '%" . $consulta . "%' or UF LIKE '%" . $consulta . "%') limit " . $inicio . "," . $registros . "";
-            $result = $this->conexao->query($SQL);
-            if (!$result)
-                $funcao->msg('error', $this->conexao->error);
-            else
-                $total = $result->num_rows;
-
-
-            while ($row = $result->fetch_assoc()) { /* var_dump($row); */
+            $resultCountRow = $this->conexao->query("SELECT FOUND_ROWS() AS `found_rows`;");
+            $total = $resultCountRow->fetch_assoc()["found_rows"];
+            $totalPaginas = ceil($total / $porPagina);
+            while ($row = $result->fetch_assoc()) {
                 echo "<form method='post'>";
 
                 echo "<ul class='list-group'>"
@@ -124,31 +110,18 @@ class ClassAluno extends ClassConfiguracao
                 echo " <b>BAIRRO:</b> " . $row['BAIRRO'];
                 echo " <b>CIDADE:</b> " . $row['CIDADE'];
                 echo " <b>UF:</b> " . $row['UF'] . "</a>";
-                echo "<li href='' class='list-group-item '>";
-                echo "<a href='?pagina=atualizar-aluno&id=" . $row['ID_ALUNO'] . "' class='btn btn-primary'>Editar</a>";
-                echo "<a href='?pagina=cadastrar-contrato&id=" . $row['ID_ALUNO'] . "' class='btn btn-success'>Gerar contrato</a>";
-                echo "<a href='?pagina=cadastrar-dependente&id={$row['ID_ALUNO']}' class='btn btn-success glyphicon glyphicon-plus'> Dependente</a>";
-                echo "<a href='?pagina=ver-dependente&id={$row['ID_ALUNO']}' class='btn btn-success glyphicon glyphicon-eye-open'> Dependente</a>";
+                echo "<li class='list-group-item '>";
+                echo "<a href='?pagina=atualizar-aluno&id=" . $row['ID_ALUNO'] . "' style='margin: 2px'  class='btn btn-primary margem_botao'>Editar</a>";
+                echo "<a href='?pagina=cadastrar-contrato&id=" . $row['ID_ALUNO'] . "' style='margin: 2px'  class='btn btn-success'>Gerar contrato</a>";
+                echo "<a href='?pagina=cadastrar-dependente&id={$row['ID_ALUNO']}' style='margin: 2px'  class='btn btn-success glyphicon glyphicon-plus'> Dependente</a>";
+                echo "<a href='?pagina=ver-dependente&id={$row['ID_ALUNO']}' style='margin: 2px'  class='btn btn-success glyphicon glyphicon-eye-open'> Dependente</a>";
                 echo "</li>";
                 echo "</ul></form>";
             }
 
-
-            echo "<nav aria-label='Page navigation'>";
-            echo "<ul class='pagination'>";
-
-            //exibe a paginação
-            for ($i = 1; $i < $numPaginas + 1; $i++) {
-
-                if ($i == $pagina)
-                    echo "<li class='active'><a href='?pagina=consultar-aluno&p=$i'>" . $i . "</li></a> ";
-                else
-                    echo "<li><a href='?pagina=consultar-aluno&p=$i'>" . $i . "</li></a> ";
-            }
+            $this->paginacao($pagina, $totalPaginas, $urlParam, $consulta);
 
 
-            echo "</ul>";
-            echo "</nav>";
         }
     }
 

@@ -1,8 +1,6 @@
 <?php
 
 /**
- * Description of ClassSevico
- *
  * @author oliveira
  */
 class ClassServico extends ClassConfiguracao
@@ -34,7 +32,7 @@ class ClassServico extends ClassConfiguracao
             $funcao->msg('error', $this->conexao->error);
     }
 
-    function ListarServico($pagina = 1, $consulta = "", $paramPag)
+    function ListarServico($pagina = 1, $consulta = "", $urlParam)
     {
         $funcao = new ClassFuncoes();
         $porPagina = 5;
@@ -51,8 +49,6 @@ class ClassServico extends ClassConfiguracao
             $total = $resultCountRow->fetch_assoc()["found_rows"];
 
             $totalPaginas = ceil($total / $porPagina);
-
-            //$inicio = ($offset * $pagina) - $offset;
 
             while ($row = $result->fetch_assoc()) {
                 echo "<form method='post'>";
@@ -78,7 +74,7 @@ class ClassServico extends ClassConfiguracao
 
             }
 
-            $this->paginacao($pagina, $totalPaginas, $paramPag, $consulta);
+            $this->paginacao($pagina, $totalPaginas, $urlParam, $consulta);
 
 
         }

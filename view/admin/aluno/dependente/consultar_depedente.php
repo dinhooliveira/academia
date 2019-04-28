@@ -27,7 +27,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
 
-                        <input type="text" class="form-control" name="consulta" placeholder="consulta" maxlength="100" value="<?php if (isset($_POST['consulta'])) echo $_POST['consulta']; ?>" >
+                        <input type="text" class="form-control" name="consulta" placeholder="consulta" maxlength="100" value="<?php if (isset($_GET['search'])) echo $_GET['search']; ?>" >
 
                     </div>
                 </div>
@@ -53,8 +53,8 @@
 
              $id_aluno = (!empty($_GET['id'])?$_GET['id']:null);
 
-            if (isset($_POST['consulta']))
-                $consulta = $_POST['consulta'];
+            if (isset($_GET['search']))
+                $consulta = $_GET['search'];
             else
                 $consulta = "";
             

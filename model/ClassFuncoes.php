@@ -11,9 +11,11 @@
  *
  * @author oliveira
  */
-class ClassFuncoes {
+class ClassFuncoes
+{
 
-    function validCPF($cpf) {
+    function validCPF($cpf)
+    {
         // determina um valor inicial para o digito $d1 e $d2
         // pra manter o respeito ;)
         $d1 = 0;
@@ -71,7 +73,8 @@ class ClassFuncoes {
         }
     }
 
-    function buscacnpj($cnpj) {
+    function buscacnpj($cnpj)
+    {
         $url = "http://receitaws.com.br/v1/cnpj/$cnpj";
         $ch = curl_init();
 
@@ -84,7 +87,8 @@ class ClassFuncoes {
         return $result;
     }
 
-    function TratarData($data) {
+    function TratarData($data)
+    {
         if ($data == "" || is_null($data))
             return false;
         else
@@ -99,8 +103,9 @@ class ClassFuncoes {
         return $data;
     }
 
-    function validar_cnpj($cnpj) {
-        $cnpj = preg_replace('/[^0-9]/', '', (string) $cnpj);
+    function validar_cnpj($cnpj)
+    {
+        $cnpj = preg_replace('/[^0-9]/', '', (string)$cnpj);
         // Valida tamanho
         if (strlen($cnpj) != 14)
             return false;
@@ -121,7 +126,8 @@ class ClassFuncoes {
         return $cnpj{13} == ($resto < 2 ? 0 : 11 - $resto);
     }
 
-    function extenso($valor = 0, $maiusculas = false) {
+    function extenso($valor = 0, $maiusculas = false)
+    {
         if (!$maiusculas) {
             $singular = ["centavo", "real", "mil", "milhão", "bilhão", "trilhão", "quatrilhão"];
             $plural = ["centavos", "reais", "mil", "milhões", "bilhões", "trilhões", "quatrilhões"];
@@ -163,7 +169,7 @@ class ClassFuncoes {
             if (($t == 1) && ($z > 0) && ($inteiro[0] > 0))
                 $r .= (($z > 1) ? " de " : "") . $plural[$t];
             if ($r)
-                $rt = $rt . ((($i > 0) && ($i <= $fim) && ($inteiro[0] > 0) && ($z < 1)) ? ( ($i < $fim) ? ", " : " e ") : " ") . $r;
+                $rt = $rt . ((($i > 0) && ($i <= $fim) && ($inteiro[0] > 0) && ($z < 1)) ? (($i < $fim) ? ", " : " e ") : " ") . $r;
         }
 
         if (!$maiusculas) {
@@ -181,49 +187,53 @@ class ClassFuncoes {
         }
     }
 
-    function GerarCodigo($id, $cpf, $academiaID) {
+    function GerarCodigo($id, $cpf, $academiaID, $dep)
+    {
 
         $pontuacao = array('.', ',', '/', '-');
 
         $cpf = str_replace($pontuacao, '', $cpf);
 
 
-        $codigo = $id . $cpf . $academiaID;
+        $codigo = $id . $cpf . $academiaID . $dep;
         return $codigo;
     }
 
-    function msg($tipo, $msg) {
+    function msg($tipo, $msg)
+    {
         echo "<div class='col-md-12'>";
 
         if ($tipo == "ok")
             echo "<div class='alert alert-success' role='alert'>" . $msg
-            . "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button></div>";
+                . "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button></div>";
 
         if ($tipo == "error")
             echo "<div class='alert alert-danger' role='alert'>" . $msg
-            . "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button></div>";
+                . "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button></div>";
 
         if ($tipo == "info")
             echo "<div class='alert alert-info' role='alert'>" . $msg
-            . "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button></div>";
+                . "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button></div>";
 
         echo "</div>";
     }
 
-    function refresh($tempo = 0) {
+    function refresh($tempo = 0)
+    {
         echo "<meta http-equiv='refresh' content='{$tempo}'>";
     }
 
-    function lead($nome, $email,$nascimento,$celular) {
+    function lead($nome, $email, $nascimento, $celular)
+    {
 
         $ch = curl_init();
-         $post = "id=122394&pid=3551590&list_id=122394&provider=leadlovers&email="
-        .$email
-        ."&name=".$nome 
-        ."&birthdate=".$nascimento
-        ."&phone=".$celular;
-         
-         echo $post;
+        $post = "id=122394&pid=3551590&list_id=122394&provider=leadlovers&email="
+            . $email
+            . "&name=" . $nome
+            . "&birthdate=" . $nascimento
+            . "&phone=" . $celular;
+
+        echo $post;
         curl_setopt($ch, CURLOPT_URL, "https://leadlovers.com/Pages/Index/12239");
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
@@ -236,11 +246,11 @@ class ClassFuncoes {
 
         curl_close($ch);
 
-    //var_dump($server_output);
+        //var_dump($server_output);
         if ($server_output == "OK") {
             return true;
         } else {
-             return false;
+            return false;
         }
 
         return $server_output . $post;

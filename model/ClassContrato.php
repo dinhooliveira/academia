@@ -24,12 +24,12 @@ class ClassContrato extends ClassConfiguracao
 
 
             try {
-                $data = date("d-m-Y");
 
-                $codigo = $funcao->GerarCodigo($alunoID, $cpf, $data);
+                echo $dep;
+                $codigo = $funcao->GerarCodigo($alunoID, $cpf, $academiaID,$dep);
 
                 $agora = date("Y-m-d H:i:s");
-                $sql = "INSERT INTO contrato(COD_CONTRATO,ID_ALUNO,ID_ACADEMIA,ID_SERVICO,STATUS,DATA_VENC,ATUALIZACAO,OBSERVACAO,ID_DEPENDENTE) VALUES ('" . $codigo . "','" . $alunoID . "', '" . $academiaID . "','" . $servicoID . "',1,'" . $dataVencimento . "','" . $agora . "','" . $ob . "','" . $dep . "')";
+                $sql = "INSERT INTO contrato(COD_CONTRATO,ID_ALUNO,ID_ACADEMIA,ID_SERVICO,STATUS,DATA_VENC,ATUALIZACAO,OBSERVACAO,ID_DEPENDENTE,ACEITO) VALUES ('" . $codigo . "','" . $alunoID . "', '" . $academiaID . "','" . $servicoID . "',1,'" . $dataVencimento . "','" . $agora . "','" . $ob . "','" . $dep . "','0')";
 
                 $result = $this->conexao->query($sql);
 
@@ -58,56 +58,16 @@ class ClassContrato extends ClassConfiguracao
         }
     }
 
-    function ListarContrato($pagina, $consulta = '')
+    function ListarContrato($pagina, $consulta,$urlParam)
     {
         $funcao = new ClassFuncoes();
 
-        $SQL = "SELECT 
-                contrato.COD_CONTRATO,
-                contrato.STATUS ,
-                contrato.ACEITO ,
-                academia.NOME AS ACADEMIA,
-                academia.BAIRRO,
-                IF(contrato.ID_DEPENDENTE > 0 , dependente.NOME , aluno.NOME) AS ALUNO,
-                aluno.CPF ,
-                servico.TIPO ,
-                servico.DESCRICAO ,
-                servico.VALOR
-                FROM 
-                contrato
-                LEFT JOIN academia ON academia.ID_ACADEMIA = contrato.ID_ACADEMIA
-                LEFT JOIN aluno ON aluno.ID_ALUNO = contrato.ID_ALUNO
-                LEFT JOIN dependente ON dependente.id = contrato.ID_DEPENDENTE
-                LEFT JOIN servico ON servico.ID_SERVICO = contrato.ID_SERVICO
-                HAVING
-                ALUNO LIKE '%" . $consulta . "%' 
-                OR CPF LIKE '%" . $consulta . "%'
-                OR DESCRICAO LIKE '%" . $consulta . "%'
-                OR TIPO LIKE '%" . $consulta . "%' 
-                OR BAIRRO LIKE '%" . $consulta . "%' 
-                OR ACADEMIA LIKE '%" . $consulta . "%'";
+        $porPagina = 5;
+        $offset = (($pagina - 1) * $porPagina);
+        $limit = $porPagina;
 
 
-        $result = $this->conexao->query($SQL);
-        if (!$result) {
-            $this->conexao->error;
-        } else {
-
-
-            //conta o total de itens
-            $total = $result->num_rows;
-
-            //seta a quantidade de itens por página, neste caso, 2 itens
-            $registros = 5;
-
-            //calcula o número de páginas arredondando o resultado para cima
-            $numPaginas = ceil($total / $registros);
-
-            //variavel para calcular o início da visualização com base na página atual
-            $inicio = ($registros * $pagina) - $registros;
-
-            //seleciona os itens por página
-            $SQL = "SELECT  
+        $SQL = "SELECT  
                     contrato.COD_CONTRATO ,
                     contrato.STATUS ,
                     contrato.ACEITO ,
@@ -130,64 +90,53 @@ class ClassContrato extends ClassConfiguracao
                     OR DESCRICAO LIKE '%" . $consulta . "%'
                     OR TIPO LIKE '%" . $consulta . "%' 
                     OR BAIRRO LIKE '%" . $consulta . "%' 
-                    OR ACADEMIA LIKE '%" . $consulta . "%' limit " . $inicio . "," . $registros . ";";
-            $result = $this->conexao->query($SQL);
-            if (!$result)
-                $funcao->msg('error', $this->conexao->error);
-            else {
-                $total = $result->num_rows;
+                    OR ACADEMIA LIKE '%" . $consulta . "%' LIMIT " . $limit . " OFFSET " . $offset;
+
+        $result = $this->conexao->query($SQL);
+        if (!$result) {
+            $funcao->msg('error', $this->conexao->error);
+        } else {
+
+            $resultCountRow = $this->conexao->query("SELECT FOUND_ROWS() AS `found_rows`;");
+            $total = $resultCountRow->fetch_assoc()["found_rows"];
+            $totalPaginas = ceil($total / $porPagina);
+
+            while ($row = $result->fetch_assoc()) { /* var_dump($row); */
+
+                echo "<form method='post'>";
+                echo "<ul class='list-group'>";
+                echo "<li  class='list-group-item active'><b>Código : </b> {$row['COD_CONTRATO']}</li>";
+                echo "<li href='#' class='list-group-item '><b>ALUNO:</b> " . $row['ALUNO'];
+                echo "<b> CPF:</b> " . $row['CPF'];
+                echo "<b> ACADEMIA:</b> " . $row['ACADEMIA'];
+                echo "<b> BAIRRO:</b> " . $row['BAIRRO'];
+                echo "<b> TIPO:</b> " . $row['TIPO'];
+                echo "<b> SERVIÇO:</b> " . utf8_encode($row['DESCRICAO']);
+                echo "<b> VALOR:</b> " . $row['VALOR'];
+                echo "</li>";
+                echo "<li class='list-group-item '>";
+                echo "<a href='?pagina=historico-pagamento&id=" . $row['COD_CONTRATO'] . "' class='btn btn-warning'>Histórico/Pagamento</a> ";
+                echo "<a href='?pagina=atualizar-data-aula&id=" . $row['COD_CONTRATO'] . "' class='btn btn-primary'>Aulas</a> ";
+                if ($row['ACEITO'] == 0) {
+                    echo "<button type='submit' name='reeviar_contrato' value=" . $row['COD_CONTRATO'] . " class='btn btn-danger'>Contrato pendente</button> ";
+                } else
+                    echo "<a href='/academia/?pagina=contrato-aluno&cod_contrato=" . $row['COD_CONTRATO'] . "' target='_blank' class='btn btn-success'>Contrato aceito</a> ";
+                //não haverá necessida de redirecionar para pagina de atualização de contrato
+                echo "<a href='?pagina=atualizar-contrato&id=".$row['COD_CONTRATO']."' class='btn btn-primary'>Editar</a>";
+                echo "<input type='hidden' name='id' value=" . $row['COD_CONTRATO'] . " />";
+                echo "<input type='hidden' name='status' value=" . $row['STATUS'] . " />";
 
 
-                $classAula = new ClassAulas();
-
-                while ($row = $result->fetch_assoc()) { /* var_dump($row); */
-
-                    echo "<form method='post'>";
-                    echo "<div class='list-group'><li href='#' class='list-group-item '><b>ALUNO:</b> " . $row['ALUNO'];
-                    echo "<b> CPF:</b> " . $row['CPF'];
-                    echo "<b> ACADEMIA:</b> " . $row['ACADEMIA'];
-                    echo "<b> BAIRRO:</b> " . $row['BAIRRO'];
-                    echo "<b> TIPO:</b> " . $row['TIPO'];
-                    echo "<b> SERVIÇO:</b> " . utf8_encode($row['DESCRICAO']);
-                    echo "<b> VALOR:</b> " . $row['VALOR'];
-
-                    echo "<br>  <a href='?pagina=historico-pagamento&id=" . $row['COD_CONTRATO'] . "' class='btn btn-warning'>Histórico/Pagamento</a> ";
-                    echo "<a href='?pagina=atualizar-data-aula&id=" . $row['COD_CONTRATO'] . "' class='btn btn-primary'>Aulas</a> ";
-                    if ($row['ACEITO'] == 0) {
-                        echo "<button type='submit' name='reeviar_contrato' value=" . $row['COD_CONTRATO'] . " class='btn btn-danger'>Contrato pendente</button> ";
-                    } else
-                        echo "<a href='/academia/?pagina=contrato-aluno&cod_contrato=" . $row['COD_CONTRATO'] . "' target='_blank' class='btn btn-success'>Contrato aceito</a> ";
-                    //não haverá necessida de redirecionar para pagina de atualização de contrato
-                    //echo "<a href='?pagina=atualizar-contrato&id=".$row['COD_CONTRATO']."' class='btn btn-primary'>Editar</a>";
-                    echo "<input type='hidden' name='id' value=" . $row['COD_CONTRATO'] . " />";
-                    echo "<input type='hidden' name='status' value=" . $row['STATUS'] . " />";
-
-
-                    //função não será mais necessaria mas ta comentado caso necessite para outra ocasião
-                    if ($row['STATUS'] == '1')
-                        echo " <input type='submit' name='bt_status' value='Ativo' class='btn btn-success' />";
-                    else
-                        echo " <input type='submit' name='bt_status' value='Desativado' class='btn btn-danger' />";
-                    echo "</form>" . " </li></div>";
-                }
-
-
-                echo "<nav aria-label='Page navigation'>";
-                echo "<ul class='pagination'>";
-
-                //exibe a paginação
-                for ($i = 1; $i < $numPaginas + 1; $i++) {
-
-                    if ($i == $pagina)
-                        echo "<li class='active'><a href='?pagina=consultar-contrato&p=$i'>" . $i . "</a></li> ";
-                    else
-                        echo "<li><a href='?pagina=consultar-contrato&p=$i'>" . $i . "</a> </li>";
-                }
-
-
-                echo "</ul>";
-                echo "</nav>";
+                //função não será mais necessaria mas ta comentado caso necessite para outra ocasião
+                if ($row['STATUS'] == '1')
+                    echo " <input type='submit' name='bt_status' value='Ativo' class='btn btn-success' />";
+                else
+                    echo " <input type='submit' name='bt_status' value='Desativado' class='btn btn-danger' />";
+                echo "</form>" . " </li></ul>";
             }
+
+           echo $this->paginacao($pagina, $totalPaginas, $urlParam, $consulta);
+
         }
     }
 

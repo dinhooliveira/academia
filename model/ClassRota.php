@@ -65,7 +65,7 @@ class ClassRota
                 $login->seguranca();
                 include("view/admin/header.php");
                 include("view/admin/menu.php");
-                include("view/admin/cadastrar_dependente.php");
+                include("view/admin/aluno/dependente/cadastrar_dependente.php");
                 include("view/admin/footer.php");
 
                 break;
@@ -74,7 +74,7 @@ class ClassRota
                 $login->seguranca();
                 include("view/admin/header.php");
                 include("view/admin/menu.php");
-                include("view/admin/consultar_depedente.php");
+                include("view/admin/aluno/dependente/consultar_depedente.php");
                 include("view/admin/footer.php");
                 break;
 
@@ -139,7 +139,7 @@ class ClassRota
                 $login->seguranca();
                 include("view/admin/header.php");
                 include("view/admin/menu.php");
-                include("view/admin/consultar_contrato.php");
+                include("view/admin/contrato/consultar_contrato.php");
                 include("view/admin/footer.php");
                 break;
 

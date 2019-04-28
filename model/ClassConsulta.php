@@ -303,7 +303,7 @@ class ClassConsulta extends ClassConfiguracao {
         if ($result = $this->conexao->query($SQL)) {
             $dados = $result->fetch_assoc();
             //var_dump($dados);
-            return "R$ " . number_format($dados["sum(pagamentos.valor)"], '2', ',', '.');
+            return "R$ <br>" . number_format($dados["sum(pagamentos.valor)"], '2', ',', '.');
         } else {
             $funcao->msg('error', $this->conexao->error);
         }
@@ -317,7 +317,7 @@ class ClassConsulta extends ClassConfiguracao {
         if ($result = $this->conexao->query($SQL)) {
             $dados = $result->fetch_assoc();
             //var_dump($dados);
-            return "R$ " . number_format($dados["sum(pagamentos.valor)"], '2', ',', '.');
+            return "R$ <br>" . number_format($dados["sum(pagamentos.valor)"], '2', ',', '.');
         } else {
             $funcao->msg('error', $this->conexao->error);
         }

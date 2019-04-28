@@ -6,11 +6,11 @@
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">
-                    Consulta de Academia
+                    Consulta de Contrato
                 </h1>
                 <ol class="breadcrumb">
                     <li class="active">
-                        <i class="fa fa-dashboard"></i><a href="?pagina=admin">Dashboard </a>/Academia/Consultar
+                        <i class="fa fa-dashboard"></i><a href="?pagina=admin">Dashboard </a>/Contrato/Consultar
                     </li>
                 </ol>
             </div>
@@ -19,9 +19,9 @@
 
 
         <div class="row">
-            <div class="col-md-2">
-                <a href="?pagina=cadastrar-academia" Class="btn btn-primary">Nova Academia</a><br><br>
-            </div>
+            <!-- <div class="col-md-2">
+                 <a href="?pagina=cadastrar-contrato" Class="btn btn-primary">Novo Contrato</a><br><br>
+             </div>-->
 
             <form method="get">
                 <div class="col-md-4">
@@ -35,20 +35,19 @@
 
                 <div class="col-md-4">
                     <div class="form-group">
-                        <button type="submit" Class="btn btn-primary">
-                            <span class="glyphicon glyphicon-search"></span>Consultar
+                        <button type="submit" Class="btn btn-primary" name="bt_consultar"><span
+                                    class="glyphicon glyphicon-search"></span>Consultar
                         </button>
                     </div>
                 </div>
-                <input type="hidden" name="pagina" value="consultar-academia"/>
-
+                 <input type="hidden" name="pagina" value="consultar-contrato" />
             </form>
 
         </div>
 
-        <div class="container-fluid" style="max-height: 500px">
+        <div class="row">
             <?php
-            $academia = new ClassAcademia();
+            $contrato = new ClassContrato();
 
             if (isset($_GET['p']))
                 $pagina = $_GET['p'];
@@ -60,16 +59,19 @@
             else
                 $consulta = "";
 
-            $academia->ListarAcademia($pagina, $consulta, 'consultar-academia');
+            $contrato->ListarContrato($pagina, $consulta, 'consultar-contrato');
 
-            if (isset($_GET['search']))
-                $consulta = $_GET['search'];
-            else
-                $consulta = "";
 
             if (isset($_POST['bt_status']))
 
-                $academia->AtivarAcademia($_POST['id'], $_POST['status']);
+                $contrato->AtivarContrato($_POST['id'], $_POST['status']);
+
+
+            if (isset($_POST['reeviar_contrato'])) {
+                $email = new ClassEmail();
+                $email->emailContrato($_POST['reeviar_contrato']);
+            }
+
             ?>
 
 
