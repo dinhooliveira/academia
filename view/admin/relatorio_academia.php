@@ -5,11 +5,11 @@
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">
-                    Consulta de Serviço
+                    Consulta de Faturamento
                 </h1>
                 <ol class="breadcrumb">
                     <li class="active">
-                        <i class="fa fa-dashboard"></i><a href="?pagina=admin">Dashboard </a>/Serviço/Consultar
+                        <i class="fa fa-dashboard"></i><a href="?pagina=admin">Dashboard </a>/Faturamento
                     </li>
                 </ol>
             </div>
@@ -105,27 +105,24 @@
                     </a>
                 </div>
             </div>
-
-
         </div>
 
         <!-- /.row -->
 
-        <!-- formulario-->
-        <form method="post" role="form">
-            <div class="row">
+        <div class='panel panel-default'>
+            <div class='panel-heading'>
+                <h3 class='panel-title'><i class='fa fa-list-alt fa-fw'></i>Filtro</h3>
+            </div>
+            <div class='panel-body'>
+                <!-- formulario-->
+                <form method="post" role="form">
 
-                <div class="col-md-4">
-                    <div class="form-group">
+                    <div class="form-group col-md-4">
                         <label>Academia</label>
-                        <select class="form-control" name="academia" id="tipo" required>
+                        <select class="form-control" name="academia" id="tipo" >
                             <?php
 
                             $dados = $classAcademia->retun_Academia();
-                            if (isset($_POST["academia"])) echo $_POST["academia"];
-                            {
-                                echo "<option value='" . $_POST["academia"] . "'>" . $_POST["academia"] . "</option>";
-                            }
                             ?>
 
                             <option value="">--</option>
@@ -134,84 +131,79 @@
                             while ($d = $dados->fetch_assoc()):
                                 ?>
 
-                                <option value="<?= $d["NOME"]; ?>"><?= $d["NOME"]; ?></option>
+                                <option value="<?= $d["NOME"]; ?>" <?= !empty($_POST["academia"]) && $_POST["academia"] == $d["NOME"] ? "selected" : "" ?>><?= $d["NOME"]; ?></option>
                             <?php endwhile; ?>
                         </select>
 
 
                     </div>
-                </div>
 
-                <div class="col-md-2">
-                    <div class="form-group">
+                    <div class="form-group col-md-4">
                         <label>Data Inicial</label>
                         <input type="date" class="form-control" name="dataI"
                                value="<?php if (isset($_POST["dataI"])) echo $_POST["dataI"]; ?>" required>
                     </div>
-                </div>
 
-                <div class="col-md-2">
-                    <div class="form-group">
+
+                    <div class="form-group col-md-4">
                         <label>Data Final</label>
                         <input type="date" class="form-control" name="dataF"
                                value="<?php if (isset($_POST["dataF"])) echo $_POST["dataF"]; ?>" required>
                     </div>
-                </div>
+                    <div class="col-md-12">
+
+                        <input type="submit" class="btn btn-primary" name="relatorio_academia" value="Consultar">
+                    </div>
+
+                </form>
             </div>
-
-
-            <div class="col-md-12">
-
-                <input type="submit" class="btn btn-primary" name="relatorio_academia" value="Consultar"><br><br>
-            </div>
-    </div><!-- /.row -->
-    </form>
-    <?php
-    if (isset($_POST["relatorio_academia"]))
-        $dados = $ClassConsulta->relatorioAcadmia($_POST["dataI"], $_POST["dataF"], $_POST["academia"]);
-    else
-        $dados = $ClassConsulta->relatorioAcadmia();
-    // var_dump($dados);
-    ?>
-
-    <div class='panel panel-default'>
-        <div class='panel-heading'>
-            <h3 class='panel-title'><i class='fa fa-list-alt fa-fw'></i> Relatório de Vencimentos</h3>
         </div>
-        <div class='panel-body'>
-            <div class='table-responsive'>
-                <table class='table table-bordered table-hover '>
-                    <thead>
-                    <tr>
+        <?php
+        if (isset($_POST["relatorio_academia"]))
+            $dados = $ClassConsulta->relatorioAcadmia($_POST["dataI"], $_POST["dataF"], $_POST["academia"]);
+        else
+            $dados = $ClassConsulta->relatorioAcadmia();
+        // var_dump($dados);
+        ?>
 
-                        <th>ACADEMIA</th>
-                        <th>TIPO</th>
-                        <th>SERVIÇO</th>
-                        <th>VALOR</th>
-                        <th>DATA PAGAMENTO</th>
-
-                    </tr>
-                    </thead>
-                    <tbody>
-
-                    <?php
-
-                    while ($d = $dados->fetch_assoc()):?>
+        <div class='panel panel-default'>
+            <div class='panel-heading'>
+                <h3 class='panel-title'><i class='fa fa-list-alt fa-fw'></i> Relatório de Vencimentos</h3>
+            </div>
+            <div class='panel-body'>
+                <div class='table-responsive'>
+                    <table class='table table-bordered table-hover '>
+                        <thead>
                         <tr>
-                            <td><?= $d["NOME"]; ?></td>
-                            <td><?= $d["TIPO"]; ?></td>
-                            <td><?= utf8_encode($d["DESCRICAO"]); ?></td>
-                            <td><?= "R$ " . number_format($d["VALOR"], '2', ',', '.'); ?></td>
-                            <td><?= $d["DATA_PAG"]; ?></td>
+
+                            <th>ACADEMIA</th>
+                            <th>TIPO</th>
+                            <th>SERVIÇO</th>
+                            <th>VALOR</th>
+                            <th>DATA PAGAMENTO</th>
 
                         </tr>
+                        </thead>
+                        <tbody>
 
-                    <?php endwhile; ?>
-                    </tbody>
-                </table>
+                        <?php
+
+                        while ($d = $dados->fetch_assoc()):?>
+                            <tr>
+                                <td><?= $d["NOME"]; ?></td>
+                                <td><?= $d["TIPO"]; ?></td>
+                                <td><?= utf8_encode($d["DESCRICAO"]); ?></td>
+                                <td><?= "R$ " . number_format($d["VALOR"], '2', ',', '.'); ?></td>
+                                <td><?= $d["DATA_PAG"]; ?></td>
+
+                            </tr>
+
+                        <?php endwhile; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 
