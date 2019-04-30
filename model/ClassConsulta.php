@@ -301,7 +301,17 @@ class ClassConsulta extends ClassConfiguracao
         $funcao = new ClassFuncoes();
         if ($dataF == '0000-00-00')
             $dataF = Date('Y-m-d');
-        $SQL = "SELECT * FROM  contrato LEFT JOIN pagamentos ON contrato.COD_CONTRATO=pagamentos.COD_CONTRATO LEFT JOIN servico ON servico.ID_SERVICO=pagamentos.ID_SERVICO LEFT JOIN academia ON contrato.ID_ACADEMIA=academia.ID_ACADEMIA WHERE academia.NOME LIKE  '%" . $academia . "%' AND pagamentos.DATA_PAG  BETWEEN '" . $dataI . "' AND '" . $dataF . "' ORDER BY pagamentos.ID_PAGAMENTO DESC";
+        $SQL = "SELECT 
+                   * ,
+                   DATE_FORMAT(pagamentos.DATA_PAG,'%d-%m-%Y') AS DATA_PAG
+                FROM  contrato 
+                LEFT JOIN pagamentos ON contrato.COD_CONTRATO=pagamentos.COD_CONTRATO 
+                LEFT JOIN servico ON servico.ID_SERVICO=pagamentos.ID_SERVICO 
+                LEFT JOIN academia ON contrato.ID_ACADEMIA=academia.ID_ACADEMIA 
+                WHERE 
+                    academia.NOME LIKE  '%" . $academia . "%' 
+                AND pagamentos.DATA_PAG  BETWEEN '" . $dataI . "' AND '" . $dataF . "' 
+                ORDER BY pagamentos.ID_PAGAMENTO DESC";
         if ($result = $this->conexao->query($SQL))
             return $result;
         else {
