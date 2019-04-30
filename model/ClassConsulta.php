@@ -154,7 +154,7 @@ class ClassConsulta extends ClassConfiguracao
                 echo "
                                             <tr>
                                                 
-                                                <td>" . utf8_encode($row['TIPO'] . " " . $row['DESCRICAO']) . "</td>
+                                                <td>" . $row['TIPO'] . " " . $row['DESCRICAO'] . "</td>
                                                 <td>" . "R$ " . number_format($row['VALOR'], 2, ',', '.') . "</td>";
 
                 echo "<form method='POST'>"
