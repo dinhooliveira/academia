@@ -105,7 +105,8 @@ CREATE TABLE `contrato` (
   `ATUALIZACAO` datetime NOT NULL,
   `OBSERVACAO` varchar(250) NOT NULL,
   `ACEITO` int(1) NOT NULL,
-  `IP` varchar(30) DEFAULT NULL
+  `IP` varchar(30) DEFAULT NULL,
+  `DATA_ACEITE` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
