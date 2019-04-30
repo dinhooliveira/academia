@@ -17,6 +17,8 @@ class ClassConfiguracao
         $this->URL = ($_SERVER['HTTPS'] ? "https" : "http") . "://" . ($_SERVER['HTTP_HOST'] . "/academia");
         $this->conexao = mysqli_connect($this->host, $this->usuario, $this->senha, $this->banco) or die(mysqli_error());
         $this->conexao->set_charset("utf8");
+        $this->conexao->query('SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,\'ONLY_FULL_GROUP_BY\',\'\'));');
+
 
     }
 

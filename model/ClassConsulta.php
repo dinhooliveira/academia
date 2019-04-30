@@ -5,10 +5,12 @@
  *
  * @author oliveira
  */
-class ClassConsulta extends ClassConfiguracao {
+class ClassConsulta extends ClassConfiguracao
+{
     /* retorna o valor total a receber com aluno mensal */
 
-    function getValorAlunoMensal() {
+    function getValorAlunoMensal()
+    {
         $funcao = new ClassFuncoes();
         $SQL = "SELECT sum(servico.VALOR),aluno.ID_ALUNO,aluno.NOME FROM servico,contrato,aluno,academia WHERE (contrato.ID_ALUNO=aluno.ID_ALUNO AND contrato.ID_SERVICO=servico.ID_SERVICO AND contrato.ID_ACADEMIA=academia.ID_ACADEMIA) AND servico.TIPO='MENSAL' AND contrato.status=1 ";
         $result = $this->conexao->query($SQL);
@@ -25,7 +27,8 @@ class ClassConsulta extends ClassConfiguracao {
 
     /* retorna o valor total a receber com aluno trimestral */
 
-    function getValorAlunoTrimestral() {
+    function getValorAlunoTrimestral()
+    {
         $funcao = new ClassFuncoes();
         $SQL = "SELECT sum(servico.VALOR),aluno.ID_ALUNO,aluno.NOME FROM servico,contrato,aluno,academia WHERE (contrato.ID_ALUNO=aluno.ID_ALUNO AND contrato.ID_SERVICO=servico.ID_SERVICO AND contrato.ID_ACADEMIA=academia.ID_ACADEMIA) AND servico.TIPO='TRIMESTRAL' AND contrato.status=1 ";
         $result = $this->conexao->query($SQL);
@@ -40,7 +43,8 @@ class ClassConsulta extends ClassConfiguracao {
         }
     }
 
-    function ConsultarVencimentos() {
+    function ConsultarVencimentos()
+    {
         //seleciona todos os contratos
         $SQL = "SELECT 
                 * FROM
@@ -62,10 +66,11 @@ class ClassConsulta extends ClassConfiguracao {
         if (!$result)
             $funcao->msg('error', $this->conexao->error);
         else
-          return $result;
+            return $result;
     }
 
-    function getValorMensalTotalReceber($cod) {
+    function getValorMensalTotalReceber($cod)
+    {
         $funcao = new ClassFuncoes();
 
         $SQL = "SELECT sum(servico.VALOR) FROM pagamentos LEFT JOIN contrato ON pagamentos.COD_CONTRATO = contrato.COD_CONTRATO LEFT JOIN aluno ON contrato.ID_ALUNO = aluno.ID_ALUNO LEFT JOIN servico ON contrato.ID_SERVICO = servico.ID_SERVICO WHERE contrato.COD_CONTRATO = '" . $cod . "' AND pagamentos.STATUS=0  ";
@@ -79,7 +84,8 @@ class ClassConsulta extends ClassConfiguracao {
         return "R$ " . number_format($row["sum(servico.VALOR)"], '2', ',', '');
     }
 
-    function getQtdMensalAtraso($cod) {
+    function getQtdMensalAtraso($cod)
+    {
         $funcao = new ClassFuncoes();
 
         $SQL = "SELECT * FROM pagamentos LEFT JOIN contrato ON pagamentos.COD_CONTRATO = contrato.COD_CONTRATO LEFT JOIN aluno ON contrato.ID_ALUNO = aluno.ID_ALUNO LEFT JOIN servico ON servico.ID_SERVICO=contrato.ID_SERVICO WHERE pagamentos.COD_CONTRATO = '" . $cod . "' AND pagamentos.STATUS=0 ";
@@ -95,7 +101,8 @@ class ClassConsulta extends ClassConfiguracao {
         return $qtd;
     }
 
-    function adimplencia($data_vencimento) {
+    function adimplencia($data_vencimento)
+    {
         $data = Date("Y-m-d");
 
         // Usa a função strtotime() e pega o timestamp das duas datas:
@@ -104,7 +111,7 @@ class ClassConsulta extends ClassConfiguracao {
 // Calcula a diferença de segundos entre as duas datas:
         $diferenca = $time_final - $time_inicial; // 19522800 segundos
 // Calcula a diferença de dias
-        $dias = (int) floor($diferenca / (60 * 60 * 24)); // 225 dias
+        $dias = (int)floor($diferenca / (60 * 60 * 24)); // 225 dias
         if ($data_vencimento < $data) {
 
             $data = date_diff(date_create($data_vencimento), date_create($data)); //days
@@ -113,7 +120,8 @@ class ClassConsulta extends ClassConfiguracao {
             return $dias;
     }
 
-    function relatorioPagamento($cod) {
+    function relatorioPagamento($cod)
+    {
         $funcao = new ClassFuncoes();
         $SQL = "SELECT * FROM  contrato LEFT JOIN pagamentos ON contrato.COD_CONTRATO=pagamentos.COD_CONTRATO LEFT JOIN servico ON servico.ID_SERVICO=pagamentos.ID_SERVICO WHERE contrato.COD_CONTRATO= '" . $cod . "' ORDER BY pagamentos.ID_PAGAMENTO DESC";
         $result = $this->conexao->query($SQL);
@@ -143,14 +151,14 @@ class ClassConsulta extends ClassConfiguracao {
 
 
                 //var_dump($row);
-                echo"
+                echo "
                                             <tr>
                                                 
                                                 <td>" . utf8_encode($row['TIPO'] . " " . $row['DESCRICAO']) . "</td>
                                                 <td>" . "R$ " . number_format($row['VALOR'], 2, ',', '.') . "</td>";
 
                 echo "<form method='POST'>"
-                . "<td><input type='date' class='form-control' name='data_pag' value='" . $funcao->TratarData($row['DATA_PAG']) . "'></td>
+                    . "<td><input type='date' class='form-control' name='data_pag' value='" . $funcao->TratarData($row['DATA_PAG']) . "'></td>
                                                 <input type='hidden'name='id_pag' value='" . $row['ID_PAGAMENTO'] . "' >
                                                 <td><input type='date' class='form-control' name='data_venc' value='{$row['DATA_VENC']}'></td>
                                                 <td><button type='submit'name='editar' class='btn btn-primary' > 
@@ -185,24 +193,28 @@ class ClassConsulta extends ClassConfiguracao {
         }
     }
 
-    function get_Qtd_Em_Dia() {
+    function get_Qtd_Em_Dia()
+    {
         $result = $this->get_Em_Dia();
         return $result->num_rows;
 
     }
 
-    function get_Qtd_Em_Vencer() {
-       $result = $this->get_Em_Vencer();
+    function get_Qtd_Em_Vencer()
+    {
+        $result = $this->get_Em_Vencer();
         return $result->num_rows;
     }
 
-    function get_Qtd_Em_Atraso() {
-      $result = $this->get_Em_Atraso();
-      return $result->num_rows;
+    function get_Qtd_Em_Atraso()
+    {
+        $result = $this->get_Em_Atraso();
+        return $result->num_rows;
     }
 
-    function get_Em_Dia(){
-       $SQL = " 
+    function get_Em_Dia()
+    {
+        $SQL = " 
             SELECT 
                 * FROM
                 (
@@ -220,19 +232,19 @@ class ClassConsulta extends ClassConfiguracao {
                     )AS con
                 WHERE con.COD_CONTRATO IS NOT NULL AND con.SITUACAO = 1 AND con.vencimento >10";
 
-       $result = $this->conexao->query($SQL);
+        $result = $this->conexao->query($SQL);
 
 
-        if (!$result){
+        if (!$result) {
             $funcao = new ClassFuncoes();
             $funcao->msg('error', $this->conexao->error);
-        }
-        else
-          return $result;
+        } else
+            return $result;
     }
 
-    function get_Em_Vencer(){
-   $SQL = " SELECT 
+    function get_Em_Vencer()
+    {
+        $SQL = " SELECT 
             * FROM
             (
                 SELECT 
@@ -249,16 +261,17 @@ class ClassConsulta extends ClassConfiguracao {
                 )AS con
             WHERE con.COD_CONTRATO IS NOT NULL AND  con.SITUACAO = 1 AND con.vencimento BETWEEN 1 AND 10";
 
-   $result = $this->conexao->query($SQL);
+        $result = $this->conexao->query($SQL);
 
-    if (!$result)
-        $funcao->msg('error', $this->conexao->error);
-    else
-      return $result;
-}
+        if (!$result)
+            $funcao->msg('error', $this->conexao->error);
+        else
+            return $result;
+    }
 
-    function get_Em_Atraso(){
-   $SQL = " SELECT 
+    function get_Em_Atraso()
+    {
+        $SQL = " SELECT 
             * FROM
             (
                 SELECT 
@@ -275,15 +288,16 @@ class ClassConsulta extends ClassConfiguracao {
                 )AS con
             WHERE con.COD_CONTRATO IS NOT NULL   AND con.SITUACAO = 1 AND con.vencimento<=0";
 
-   $result = $this->conexao->query($SQL);
+        $result = $this->conexao->query($SQL);
 
-    if (!$result)
-        $funcao->msg('error', $this->conexao->error);
-    else
-      return $result;
-}
+        if (!$result)
+            $funcao->msg('error', $this->conexao->error);
+        else
+            return $result;
+    }
 
-    function relatorioAcadmia($dataI = '0000-00-00', $dataF = '0000-00-00', $academia = '') {
+    function relatorioAcadmia($dataI = '0000-00-00', $dataF = '0000-00-00', $academia = '')
+    {
         $funcao = new ClassFuncoes();
         if ($dataF == '0000-00-00')
             $dataF = Date('Y-m-d');
@@ -295,7 +309,8 @@ class ClassConsulta extends ClassConfiguracao {
         }
     }
 
-    function get_relatorio_Acadmia_soma_mensal($dataI = '0000-00-00', $dataF = '0000-00-00', $academia = '') {
+    function get_relatorio_Acadmia_soma_mensal($dataI = '0000-00-00', $dataF = '0000-00-00', $academia = '')
+    {
         $funcao = new ClassFuncoes();
         if ($dataF == '0000-00-00')
             $dataF = Date('Y-m-d');
@@ -309,7 +324,8 @@ class ClassConsulta extends ClassConfiguracao {
         }
     }
 
-    function get_relatorio_Acadmia_soma_trimestral($dataI = '0000-00-00', $dataF = '0000-00-00', $academia = '') {
+    function get_relatorio_Acadmia_soma_trimestral($dataI = '0000-00-00', $dataF = '0000-00-00', $academia = '')
+    {
         $funcao = new ClassFuncoes();
         if ($dataF == '0000-00-00')
             $dataF = Date('Y-m-d');
@@ -323,7 +339,8 @@ class ClassConsulta extends ClassConfiguracao {
         }
     }
 
-    function get_relatorio_Acadmia_soma_total($dataI = '0000-00-00', $dataF = '0000-00-00', $academia = '') {
+    function get_relatorio_Acadmia_soma_total($dataI = '0000-00-00', $dataF = '0000-00-00', $academia = '')
+    {
         $funcao = new ClassFuncoes();
         if ($dataF == '0000-00-00')
             $dataF = Date('Y-m-d');
@@ -337,28 +354,28 @@ class ClassConsulta extends ClassConfiguracao {
         }
     }
 
-    function consultaAlunos($horario = "8:00", $semana = "", $academia = "", $servico = "") {
+    function consultaAlunos($horario = "", $semana = "", $academia = "", $servico = "")
+    {
         $funcao = new ClassFuncoes();
 
-        if ($semana == "") {
-            $data = date("d-m-Y");
-            if (date('w', strtotime($data)) == 0)
-                $semana = "seg";
-            if (date('w', strtotime($data)) == 1)
-                $semana = "seg";
-            if (date('w', strtotime($data)) == 2)
-                $semana = "ter";
-            if (date('w', strtotime($data)) == 3)
-                $semana = "qua";
-            if (date('w', strtotime($data)) == 4)
-                $semana = "qui";
-            if (date('w', strtotime($data)) == 5)
-                $semana = "sex";
-            if (date('w', strtotime($data)) == 6)
-                $semana = "sab";
-        }
+        $queryAux = !empty($semana) ? " AND  aula." . $semana . "=1" : "";
 
-        $SQL = "SELECT academia.NOME as ACADEMIA,aluno.NOME,servico.DESCRICAO,aula.horario FROM contrato LEFT JOIN aluno ON aluno.ID_ALUNO = contrato.ID_ALUNO LEFT JOIN academia ON academia.ID_ACADEMIA=contrato.ID_ACADEMIA LEFT JOIN aula ON contrato.COD_CONTRATO = aula.cod_contrato LEFT JOIN servico ON servico.ID_SERVICO=contrato.ID_SERVICO WHERE aula.horario LIKE '%" . $horario . "%' AND aula." . $semana . "=1 AND   academia.NOME LIKE '%" . $academia . "%' AND servico.DESCRICAO LIKE '%" . $servico . "%'";
+
+        $SQL = " SELECT 
+                       academia.NOME as ACADEMIA,
+                       aluno.NOME,servico.DESCRICAO,
+                       aula.horario 
+                FROM contrato 
+                LEFT JOIN aluno ON aluno.ID_ALUNO = contrato.ID_ALUNO 
+                LEFT JOIN academia ON academia.ID_ACADEMIA=contrato.ID_ACADEMIA 
+                LEFT JOIN aula ON contrato.COD_CONTRATO = aula.cod_contrato
+                LEFT JOIN servico ON servico.ID_SERVICO=contrato.ID_SERVICO 
+                WHERE
+                     academia.NOME LIKE '%" . $academia . "%'
+                AND    aula.horario LIKE '%" . $horario . "%' 
+                AND servico.DESCRICAO LIKE '%" . $servico . "%'
+                {$queryAux}
+                ";
 
         if ($result = $this->conexao->query($SQL)) {
             //var_dump($result);

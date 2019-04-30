@@ -181,7 +181,7 @@
 
          imagem('');
          function imagem(x){
-               var img =  <?="'view/upload/semfoto.png'"; ?>
+               var img =  <?="'{$aluno->URL}/public/upload/semfoto.png'"; ?>
 
                if(typeof x !== 'object')
                 document.getElementById('form_imagem').src = img;
