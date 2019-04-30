@@ -52,7 +52,7 @@
                         <label>Horário</label>
                         <select class="form-control" name="horario">
                             <option value="">--</option>
-                            <option value="08:00" <?= !empty($_POST["horario"]) && $_POST["horario"] == "8:00" ? "selected" : "" ?>>
+                            <option value="08:00" <?= !empty($_POST["horario"]) && $_POST["horario"] == "08:00" ? "selected" : "" ?>>
                                 08:00
                             </option>
                             <option value="09:00" <?= !empty($_POST["horario"]) && $_POST["horario"] == "09:00" ? "selected" : "" ?>>
@@ -153,8 +153,10 @@
                         <tr>
 
                             <th>ACADEMIA</th>
+                            <th>ALUNO</th>
                             <th>TIPO</th>
                             <th>SERVIÇO</th>
+                            <th>DIA/SEM</th>
                             <th>HORÁRIO</th>
 
                         </tr>
@@ -167,7 +169,9 @@
                             <tr>
                                 <td><?= $d["ACADEMIA"]; ?></td>
                                 <td><?= $d["NOME"]; ?></td>
+                                <td><?= $d["TIPO"]; ?></td>
                                 <td><?= $d["DESCRICAO"]; ?></td>
+                                <td><?= $d["semana"]; ?></td>
                                 <td><?= $d["horario"]; ?></td>
                             </tr>
 

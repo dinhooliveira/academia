@@ -363,13 +363,24 @@ class ClassConsulta extends ClassConfiguracao
 
         $SQL = " SELECT 
                        academia.NOME as ACADEMIA,
-                       aluno.NOME,servico.DESCRICAO,
-                       aula.horario 
+                       IF(contrato.ID_DEPENDENTE > 0,'DEPENDENTE','ALUNO') as TIPO,
+                       IF(contrato.ID_DEPENDENTE > 0, dependente.nome, aluno.NOME) AS NOME,
+                       servico.DESCRICAO,
+                       aula.horario,
+                       CONCAT(
+                         IF(aula.seg=1,'SEG,',''),
+                         IF(aula.ter=1,'TER,',''),
+                         IF(aula.qua=1,'QUA,',''),
+                         IF(aula.qui=1,'QUI,',''),
+                         IF(aula.sex=1,'SEX,',''),
+                         IF(aula.sab=1,'SAB,','')
+                       ) as semana
                 FROM contrato 
                 LEFT JOIN aluno ON aluno.ID_ALUNO = contrato.ID_ALUNO 
                 LEFT JOIN academia ON academia.ID_ACADEMIA=contrato.ID_ACADEMIA 
                 LEFT JOIN aula ON contrato.COD_CONTRATO = aula.cod_contrato
                 LEFT JOIN servico ON servico.ID_SERVICO=contrato.ID_SERVICO 
+                LEFT JOIN dependente ON dependente.id = contrato.ID_DEPENDENTE
                 WHERE
                      academia.NOME LIKE '%" . $academia . "%'
                 AND    aula.horario LIKE '%" . $horario . "%' 
