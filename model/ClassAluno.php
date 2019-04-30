@@ -8,7 +8,7 @@ class ClassAluno extends ClassConfiguracao
 
         $funcao = new ClassFuncoes();
         $classUpload = new ClassUpload();
-        if ($foto != null) $foto = $classUpload->construtor($foto, 1000, 800, "{$this->URL}/public/upload/");
+        if ($foto != null) $foto = $classUpload->construtor($foto, 1000, 800, "public/upload/");
 
         if ($nome == "") {
             $funcao->msg('error', 'Nome é Obrigatório');
@@ -28,7 +28,7 @@ class ClassAluno extends ClassConfiguracao
             if (!$result) {
                 if ($this->conexao->errno == 1062) {
                     $funcao->msg('info', 'CPF já possui cadastro');
-                    if ($foto != FALSE) unlink("{$this->URL}/public/upload/" . $foto);
+                    if ($foto != FALSE) unlink("public/upload/" . $foto);
                 } else {
                     $funcao->msg('info', $this->conexao->error);
                 }
@@ -44,7 +44,7 @@ class ClassAluno extends ClassConfiguracao
 
         $funcao = new ClassFuncoes();
         $classUpload = new ClassUpload();
-        if ($foto != null) $foto = $classUpload->construtor($foto, 1000, 800, "{$this->URL}/public/upload/");
+        if ($foto != null) $foto = $classUpload->construtor($foto, 1000, 800, "public/upload/");
 
         if ($nome == "") {
             $funcao->msg('error', 'Nome é Obrigatório');
@@ -56,7 +56,7 @@ class ClassAluno extends ClassConfiguracao
             if (!$result) {
                 if ($this->conexao->errno == 1062) {
                     $funcao->msg('info', 'CPF já possui cadastro');
-                    if ($foto != FALSE) unlink("{$this->URL}/public/upload/" . $foto);
+                    if ($foto != FALSE) unlink("public/upload/". $foto);
                 } else {
                     $funcao->msg('info', $this->conexao->error);
                 }
@@ -222,7 +222,7 @@ class ClassAluno extends ClassConfiguracao
 
         $funcao = new ClassFuncoes();
         $classUpload = new ClassUpload();
-        if ($foto != null) $foto = $classUpload->construtor($foto, 1000, 800, "view/upload/");
+        if ($foto != null) $foto = $classUpload->construtor($foto, 1000, 800, "public/upload/");
 
         if ($nome == "") {
             $funcao->msg('error', 'Nome é Obrigatório');
@@ -277,10 +277,10 @@ class ClassAluno extends ClassConfiguracao
             $result = $this->conexao->query($sql);
 
             if (!$result) {
-                if ($foto != FALSE) unlink("{$this->URL}/public/upload/" . $foto);
+                if ($foto != FALSE) unlink("public/upload/" . $foto);
                 $funcao->msg('error', 'Não foi possivel atualizar os dados!');
             } else {
-                if ($foto_antiga != null) unlink("{$this->URL}/public/upload/" . $foto_antiga);
+                if ($foto_antiga != null) unlink("public/upload/" . $foto_antiga);
                 $funcao->msg('ok', 'Atualizado com sussesso!');
             }
         }
