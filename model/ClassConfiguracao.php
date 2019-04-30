@@ -5,9 +5,9 @@ class ClassConfiguracao
 {
 
     public $host = "localhost";
-    public $usuario = "root";
-    public $senha = "";
-    public $banco = "academia";
+    public $usuario = "u116406085_acade";
+    public $senha = "academia";
+    public $banco = "u116406085_acade";
     public $conexao;
     public $URL;
 
