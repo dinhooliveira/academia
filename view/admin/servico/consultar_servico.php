@@ -60,8 +60,9 @@
 
             $servico->ListarServico($pagina, $consulta,'consultar-servico');
 
-            if (isset($_POST['bt_status']))
+            if (isset($_POST['bt_status'])){
                 $servico->AtivarServicos($_POST['id'], $_POST['status']);
+            }
             ?>
 
 

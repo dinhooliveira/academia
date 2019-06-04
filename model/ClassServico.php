@@ -67,9 +67,9 @@ class ClassServico extends ClassConfiguracao
 
                 echo "</li>";
                 echo "</div>";
+                echo "<input type='hidden' name='id' value='{$row['ID_SERVICO']}' />";
+                echo "<input type='hidden' name='status' value='{$row['STATUS']}' />";
                 echo "</form>";
-                echo "<input type='hidden' name='id' value=" . $row['ID_SERVICO'] . " />";
-                echo "<input type='hidden' name='status' value=" . $row['STATUS'] . " />";
 
 
             }
@@ -90,7 +90,7 @@ class ClassServico extends ClassConfiguracao
         else
             $status = 0;
 
-        $SQL = "UPDATE servico Set status=" . $status . " WHERE id_servico=" . $id . "";
+        $SQL = "UPDATE servico Set status='{$status}' WHERE id_servico={$id}";
         $result = $this->conexao->query($SQL);
         if ($result) {
             $funcao->msg('ok', ' Status atualizado com sucesso!');

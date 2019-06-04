@@ -175,9 +175,9 @@ class ClassAluno extends ClassConfiguracao
                     . "<a href='#' class='list-group-item active'>"
                     . "<img style='width:10%; hight:10%; border-radius:50px;'  src='";
                 if ($row['foto'] != "")
-                    echo "view/upload/" . $row['foto'];
+                    echo $this->URL."/public/upload/" . $row['foto'];
                 else
-                    echo "view/upload/semfoto.png";
+                    echo $this->URL."/public/upload/semfoto.png";
                 echo "' alt='...'>";
                 echo "   <b style='font-size:200%'> " . $row['nome'] . "</b></a>";
                 $date = date_create($row['nascimento']);
