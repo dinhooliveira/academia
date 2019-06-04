@@ -81,7 +81,7 @@
                                 <select class="form-control" name="servicos" id="tipo" required>
                                     
                                     <?php if(isset($dados['ID_SERVICO'])) 
-                                    echo"<option value='".$dados['ID_SERVICO']."'>  ".$dados['TIPO']." ".utf8_encode($dados['DESCRICAO'])."  - R$ ".$dados['VALOR']."</option>";
+                                    echo"<option value='".$dados['ID_SERVICO']."'>  ".$dados['TIPO']." ".$dados['DESCRICAO']."  - R$ ".$dados['VALOR']."</option>";
                                      ?>
                                     
                                    <?php

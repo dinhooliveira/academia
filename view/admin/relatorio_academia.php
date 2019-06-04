@@ -192,7 +192,7 @@
                             <tr>
                                 <td><?= $d["NOME"]; ?></td>
                                 <td><?= $d["TIPO"]; ?></td>
-                                <td><?= utf8_encode($d["DESCRICAO"]); ?></td>
+                                <td><?= $d["DESCRICAO"]; ?></td>
                                 <td><?= "R$ " . number_format($d["VALOR"], '2', ',', '.'); ?></td>
                                 <td><?= $d["DATA_PAG"]; ?></td>
 

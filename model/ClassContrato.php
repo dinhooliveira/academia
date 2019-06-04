@@ -111,7 +111,7 @@ class ClassContrato extends ClassConfiguracao
                 echo "<b> ACADEMIA:</b> " . $row['ACADEMIA'];
                 echo "<b> BAIRRO:</b> " . $row['BAIRRO'];
                 echo "<b> TIPO:</b> " . $row['TIPO'];
-                echo "<b> SERVIÇO:</b> " . utf8_encode($row['DESCRICAO']);
+                echo "<b> SERVIÇO:</b> " . $row['DESCRICAO'];
                 echo "<b> VALOR:</b> " . $row['VALOR'];
                 echo "</li>";
                 echo "<li class='list-group-item '>";
@@ -230,7 +230,7 @@ class ClassContrato extends ClassConfiguracao
         if ($result)
             while ($row = $result->fetch_assoc()) {
                 echo "<option value='" . $row["ID_SERVICO"] . "'>";
-                echo $row["TIPO"] . " " . utf8_encode($row["DESCRICAO"]) . " -  R$ " . $row["VALOR"];
+                echo $row["TIPO"] . " " . $row["DESCRICAO"] . " -  R$ " . $row["VALOR"];
                 echo "</option>";
             } else
             $funcao->msg('error', $this->conexao->error);
