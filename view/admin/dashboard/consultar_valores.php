@@ -18,7 +18,7 @@
                 <!-- /.row -->
                           <?php 
                             
-                            $ClassConsulta = new ClassConsulta();
+                            $ClassConsulta = new \Model\Consulta();
                             
                             ?>
 
@@ -210,11 +210,11 @@
 </div>
 </div>
            <?php 
-                 $classpagamentos = new ClassPagamentos();
+                 $classpagamentos = new \Model\Pagamentos();
                  //$classpagamentos->gerarPagamentoALunoTrimestral();
                  $ClassConsulta->relatorioAcadmia();
                  
-                 $contrato = new ClassContrato();
+                 $contrato = new \Model\Contrato();
                   if(isset($_POST['inativar']))
                              $contrato->AtivarContrato($_POST['inativar'],1);
            ?>

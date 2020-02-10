@@ -45,7 +45,7 @@
 
         <div class="container-fluid" style="max-height: 500px">
             <?php
-            $servico = new ClassServico();
+            $servico = new \Model\Servico();
 
             if (isset($_GET['p']) && is_numeric($_GET['p']) && $_GET['p'] > 0) {
                 $pagina = $_GET['p'];

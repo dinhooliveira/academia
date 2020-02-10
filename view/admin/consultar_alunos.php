@@ -15,9 +15,9 @@
         </div>
         <?php
 
-        $ClassConsulta = new ClassConsulta();
-        $classAcademia = new ClassAcademia();
-        $ClassServico = new ClassServico();
+        $ClassConsulta = new \Model\Consulta();
+        $classAcademia = new \Model\Academia();
+        $ClassServico = new \Model\Servico();
 
         ?>
 

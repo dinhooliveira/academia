@@ -1,25 +1,29 @@
 <?php
+namespace Model;
 
-
-class ClassConfiguracao
+class Configuracao
 {
 
-    public $host = "localhost";
-    public $usuario = "u116406085_acade";
-    public $senha = "academia";
-    public $banco = "u116406085_acade";
+    public $host;
+    public $usuario;
+    public $senha;
+    public $banco;
     public $conexao;
     public $URL;
 
 
-    public function ClassConfiguracao()
+    public function __construct()
     {
-        $this->URL = ($_SERVER['HTTPS'] ? "https" : "http") . "://" . ($_SERVER['HTTP_HOST'] . "/academia");
+        $this->host = getenv('host');
+        $this->usuario = getenv('user');
+        $this->senha = getenv('password');
+        $this->banco = getenv('db');
+        $this->URL = getenv('url');
+
+        //$this->URL = ($_SERVER['HTTPS'] ? "https" : "http") . "://" . ($_SERVER['HTTP_HOST']);
         $this->conexao = mysqli_connect($this->host, $this->usuario, $this->senha, $this->banco) or die(mysqli_error());
         $this->conexao->set_charset("utf8");
         $this->conexao->query('SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,\'ONLY_FULL_GROUP_BY\',\'\'));');
-
-
     }
 
 

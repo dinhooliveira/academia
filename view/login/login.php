@@ -7,7 +7,7 @@
     <title>Academia</title>
 
     <?php
-    $config = new ClassConfiguracao();
+    $config = new \Model\Configuracao();
     ?>
 
     <link rel="stylesheet" href="<?= $config->URL ?>/public/login/css/style.css">
@@ -26,44 +26,41 @@
 
 <div class="container">
     <section id="content">
-        <form method="post">
-            <h1><img src="<?= $config->URL ?>/public//img/logo.png" width="30%"></h1>
-
-            <?php if (isset($_POST['logar'])): ?>
-                <div>
-                    <input type="text" name="login" placeholder="cpf/email" required="" value="<?= $_POST['login']; ?>"
-                           id="username"/>
-                </div>
-                <div>
-                    <input type="password" name="senha" placeholder="Senha" required="" value="<?= $_POST['login']; ?>"
-                           id="password"/>
-                </div>
-                <div>
-                    <input type="submit" name="logar" value="Acessar"/>
-                </div>
-            <?php else: ?>
-
-                <div>
-                    <input type="text" name="login" placeholder="cpf/email" required="" id="username"/>
-                </div>
-                <div>
-                    <input type="password" name="senha" placeholder="Senha" required="" id="password"/>
-                </div>
-                <div>
-                    <input type="submit" name="logar" value="Acessar"/>
-                </div>
-
-            <?php endif ?>
-        </form><!-- form -->
+    <form method="post">
+    
+        <h1>
+        <img src="<?= $config->URL ?>/public//img/logo.png" width="30%">
+        </h1>
+        <div>
+            <input
+                type="text" 
+                name="login" 
+                placeholder="cpf/email" 
+                required="" 
+                value="<?= !empty($_POST['login'])?$_POST['login']:''; ?>"
+                id="username"
+            />
+        </div>
+        <div>
+            <input 
+                type="password" 
+                name="senha" 
+                placeholder="Senha" 
+                required="" 
+                value="<?= !empty($_POST['senha'])?$_POST['senha']:''; ?>"
+                id="password"
+            />
+        </div>
         <div class="button">
-
+            <input  type="submit" name="logar" value="Acessar"/>
         </div><!-- button -->
+        </form><!-- form -->
     </section><!-- content -->
 </div><!-- container -->
 
 <?php
 
-$login = new ClassLogin();
+$login = new \Model\Login();
 
 if (isset($_POST['logar']))
     $login->login($_POST['login'], $_POST['senha']);

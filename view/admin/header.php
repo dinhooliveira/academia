@@ -3,7 +3,7 @@
 <head>
 
     <?php
-    $config = new ClassConfiguracao();
+    $config = new \Model\Configuracao();
     ?>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">

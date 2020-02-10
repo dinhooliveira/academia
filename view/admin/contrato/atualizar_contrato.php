@@ -1,7 +1,7 @@
 
 <?php
-  $contrato = new ClassContrato();
-  $aula = new ClassAulas();
+  $contrato = new \Model\Contrato();
+  $aula = new \Model\Aulas();
 
 ?>
 <div id="page-wrapper">
@@ -191,7 +191,7 @@
                          
                          
                       <?php
-             $contrato = new ClassContrato();
+             $contrato = new \Model\Contrato();
              
              if(isset($_POST['atualizar_contrato']))
              

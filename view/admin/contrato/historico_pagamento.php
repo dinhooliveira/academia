@@ -1,7 +1,7 @@
 
 <?php
-$contrato = new ClassContrato();
-$aula = new ClassAulas();
+$contrato = new \Model\Contrato();
+$aula = new \Model\Aulas();
 ?>
 <div id="page-wrapper">
 
@@ -188,7 +188,7 @@ $aula = new ClassAulas();
                 </form> <!-- /.formulario -->
 
                 <?php
-                $pagamento = new ClassPagamentos();
+                $pagamento = new \Model\Pagamentos();
 
                 if (isset($_POST['efetuar_pagamento'])) {
                     $pagamento->pagar($_POST['id'], $_POST['academia'], $_POST['servicos'], $_POST['vencimento']);
@@ -217,7 +217,7 @@ $aula = new ClassAulas();
                 ?>
 
                 <?php
-                $ClassConsulta = new ClassConsulta();
+                $ClassConsulta = new \Model\Consulta();
                 $ClassConsulta->relatorioPagamento($_GET['id']);
                 ?>
 

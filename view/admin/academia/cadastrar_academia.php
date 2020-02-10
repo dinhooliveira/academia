@@ -97,7 +97,7 @@
         </div>
 
         <?php
-        $academia = new ClassAcademia();
+        $academia = new \Model\Academia();
 
         if (isset($_POST['cadastrar_academia']))
             $academia->CadastrarAcademia($_POST['nome'], $_POST['cep'], $_POST['logradouro'], $_POST['numero'], $_POST['complemento'], $_POST['bairro'], $_POST['cidade'], $_POST['uf']);

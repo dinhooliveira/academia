@@ -113,7 +113,7 @@
                             <?php
                               if(isset($_GET['logout'])) 
                               {
-                              $login = new ClassLogin();
+                              $login = new \Model\Login();
                               $login->LogOut();
                               }
                              ?>

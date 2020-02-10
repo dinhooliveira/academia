@@ -1,16 +1,22 @@
 <?php
+namespace Model;
+use \Model\Funcoes;
+use \Model\Servico;
+use \Model\Pagamentos;
+use \Model\Aulas;
+use \Model\Email;
 
-class ClassContrato extends ClassConfiguracao
+class Contrato extends \Model\Configuracao
 {
 
     function CadastrarContrato($alunoID, $servicoID, $dataVencimento, $cpf, $academiaID, $seg, $ter, $qua, $qui, $sex, $sab, $hor, $ob, $dep)
     {
 
-        $funcao = new ClassFuncoes();
-        $pagamento = new ClassPagamentos();
-        $classServico = new ClassServico();
-        $classAula = new ClassAulas();
-        $classEmail = new ClassEmail();
+        $funcao = new Funcoes();
+        $pagamento = new Pagamentos();
+        $Servico = new Servico();
+        $aula = new Aulas();
+        $Email = new Email();
 
         $this->conexao->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 
@@ -35,23 +41,23 @@ class ClassContrato extends ClassConfiguracao
 
                 if (!$result) {
                     if ($this->conexao->errno == 1062) {
-                        throw new Exception('Contrato já possui cadastro');
+                        throw new \Exception('Contrato já possui cadastro');
                     } else {
-                        throw new Exception($this->conexao->error);
+                        throw new \Exception($this->conexao->error);
                     }
                 } else {
                     $data = date("Y-m-d");
-                    $tipo = $classServico->getTipoServico($servicoID);
+                    $tipo = $Servico->getTipoServico($servicoID);
 
                     $pagamento->gerarPagamento($codigo, $data, $dataVencimento, $tipo, $servicoID, 1);
-                    $classAula->insert_Aulas($codigo, $seg, $ter, $qua, $qui, $sex, $sab, $hor);
+                    $aula->insert_Aulas($codigo, $seg, $ter, $qua, $qui, $sex, $sab, $hor);
 
-                    $classEmail->emailContrato($codigo);
+                    $Email->emailContrato($codigo);
                     $funcao->msg('ok', 'Cadastrado com sussesso');
                     $this->conexao->commit();
                 }
 
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $funcao->msg('error', $e->getMessage());
                 $this->conexao->rollback();
             }
@@ -60,7 +66,7 @@ class ClassContrato extends ClassConfiguracao
 
     function ListarContrato($pagina, $consulta,$urlParam)
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
 
         $porPagina = 5;
         $offset = (($pagina - 1) * $porPagina);
@@ -143,7 +149,7 @@ class ClassContrato extends ClassConfiguracao
     function get_Aluno($cod_contrato = "")
     {
 
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         $SQL = "SELECT * FROM  aluno LEFT JOIN contrato ON contrato.ID_ALUNO=aluno.ID_ALUNO LEFT JOIN servico ON servico.ID_SERVICO=contrato.ID_SERVICO  WHERE contrato.COD_CONTRATO='" . $cod_contrato . "'";
 
         $result = $this->conexao->query($SQL);
@@ -156,7 +162,7 @@ class ClassContrato extends ClassConfiguracao
     //retorna um objeto com os dados do banco
     function get_Academia($cod_contrato)
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         $SQL = "SELECT * FROM  academia LEFT JOIN contrato ON contrato.ID_ACADEMIA=academia.ID_ACADEMIA WHERE contrato.COD_CONTRATO='" . $cod_contrato . "'";
 
         $result = $this->conexao->query($SQL);
@@ -169,7 +175,7 @@ class ClassContrato extends ClassConfiguracao
     //retorna um objeto com os dados do banco
     function get_Servico($cod_contrato)
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         $SQL = "SELECT * FROM  servico LEFT JOIN contrato ON contrato.ID_SERVICO=servico.ID_SERVICO WHERE contrato.COD_CONTRATO='" . $cod_contrato . "'";
 
         $result = $this->conexao->query($SQL);
@@ -181,7 +187,7 @@ class ClassContrato extends ClassConfiguracao
 
     function GetDadosContrato($id)
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         $SQL = "SELECT academia.NOME AS ACADEMIA ,academia.ID_ACADEMIA, aluno.NOME,servico.ID_SERVICO,servico.TIPO,servico.DESCRICAO,servico.VALOR,contrato.DATA_VENC,contrato.OBSERVACAO FROM contrato,aluno,servico,academia WHERE (contrato.ID_ALUNO=aluno.ID_ALUNO AND contrato.ID_ACADEMIA=academia.ID_ACADEMIA AND contrato.ID_SERVICO=servico.ID_SERVICO) AND contrato.COD_CONTRATO='" . $id . "'";
 
         $result = $this->conexao->query($SQL);
@@ -193,7 +199,7 @@ class ClassContrato extends ClassConfiguracao
 
     function GetAcademia()
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         $SQL = "SELECT * FROM academia ORDER BY NOME ASC";
 
         $result = $this->conexao->query($SQL);
@@ -208,7 +214,7 @@ class ClassContrato extends ClassConfiguracao
 
     function GetAluno()
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         $SQL = "SELECT * FROM aluno ORDER BY NOME ASC";
 
         $result = $this->conexao->query($SQL);
@@ -223,7 +229,7 @@ class ClassContrato extends ClassConfiguracao
 
     function GetServico()
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         $SQL = "SELECT * FROM servico ORDER BY TIPO ASC";
 
         $result = $this->conexao->query($SQL);
@@ -239,15 +245,15 @@ class ClassContrato extends ClassConfiguracao
     function AtualizarContrato($id, $academia, $servico, $vencimento)
     {
 
-        $funcao = new ClassFuncoes();
-        $pagamentos = new ClassPagamentos();
-        $ClassServico = new ClassServico();
+        $funcao = new Funcoes();
+        $pagamentos = new Pagamentos();
+        $Servico = new Servico();
 
         if ($id == "" || $academia == "" || $servico == "" || $vencimento == "") {
             $funcao->msg('error', 'Selecione todos os dados');
         } else {
             $dadosContrato = $this->GetDadosContrato($id);
-            $servicoTipo = $ClassServico->getTipoServico($servico);
+            $servicoTipo = $Servico->getTipoServico($servico);
             echo $servicoTipo;
             echo $dadosContrato['TIPO'];
 
@@ -259,7 +265,7 @@ class ClassContrato extends ClassConfiguracao
 
     function UpdateContrato($id, $academia, $servico, $vencimento)
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         $data = date("Y-m-d H:i:s");
         $sql = "UPDATE contrato Set ID_ACADEMIA=" . $academia . ",ID_SERVICO=" . $servico . ",DATA_VENC='" . $vencimento . "', ATUALIZACAO='" . $data . "' WHERE COD_CONTRATO=" . $id . "";
 
@@ -278,7 +284,7 @@ class ClassContrato extends ClassConfiguracao
 
     function AtivarContrato($id, $status)
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
 
         if ($status == 0)
             $status = 1;
@@ -299,7 +305,7 @@ class ClassContrato extends ClassConfiguracao
 
     function update_observacao($cod, $observacao)
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         $SQL = "UPDATE contrato Set OBSERVACAO='" . $observacao . "' WHERE cod_contrato='" . $cod . "'";
 
         if ($this->conexao->query($SQL)) {
@@ -314,7 +320,7 @@ class ClassContrato extends ClassConfiguracao
 
     function aceitarContrato($contrato)
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
 
         $SQL = "UPDATE contrato SET DATA_ACEITE='" . date('Y-m-d H:i:s') . "',IP='" . $_SERVER['REMOTE_ADDR'] . "',ACEITO=1 WHERE COD_CONTRATO='" . $contrato . "'";
 

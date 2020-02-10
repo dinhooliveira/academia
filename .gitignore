@@ -1,3 +1,5 @@
 /nbproject/private/
 /view/upload/*
 !/view/upload/semfoto.png
+/vendor/
+.env

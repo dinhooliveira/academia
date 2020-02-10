@@ -1,5 +1,5 @@
 <?php
-$aluno = new ClassAcademia();
+$aluno = new \Model\Academia();
 if (isset($_GET['id'])) {
     $dados = $aluno->GetAcademia($_GET['id']);
 } else {
@@ -94,10 +94,7 @@ if (isset($_GET['id'])) {
             </div>
         </div>
 
-
         <?php
-        $aluno = new ClassAcademia();
-
         if (isset($_POST['atualizar_academia']))
             $aluno->AtualizarAcademia($_GET['id'], $_POST['nome'], $_POST['cep'], $_POST['logradouro'], $_POST['numero'], $_POST['complemento'], $_POST['bairro'], $_POST['cidade'], $_POST['uf']);
 

@@ -48,7 +48,7 @@
 
         <div class="container-fluid" style="max-height: 500px">
             <?php
-            $academia = new ClassAcademia();
+            $academia = new \Model\Academia();
 
             if (isset($_GET['p']))
                 $pagina = $_GET['p'];

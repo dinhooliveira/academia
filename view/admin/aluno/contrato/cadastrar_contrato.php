@@ -1,5 +1,5 @@
 <?php
-$contrato = new ClassContrato();
+$contrato = new \Model\Contrato();
 
 ?>
 <div id="page-wrapper">
@@ -12,7 +12,7 @@ $contrato = new ClassContrato();
                 <h1 class="page-header">
                     Cadastro de Contrato
                     <?php
-                    $aluno = new ClassAluno();
+                    $aluno = new \Model\Aluno();
                     $dados = $aluno->GetAluno($_GET['id']);
                     if (isset($dados['NOME'])) echo "<br>" . $dados['NOME'];
                     ?>
@@ -176,7 +176,7 @@ $contrato = new ClassContrato();
 
 
             <?php
-            $contrato = new ClassContrato();
+            $contrato = new \Model\Contrato();
 
             if (isset($_POST['cadastrar_academia'])) {
                 if (!isset($_POST['seg'])) $_POST['seg'] = 0;

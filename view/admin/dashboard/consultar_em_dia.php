@@ -17,8 +17,8 @@
         <!-- /.row -->
         <?php
 
-        $ClassConsulta = new ClassConsulta();
-        $funcoes = new ClassFuncoes();
+        $ClassConsulta = new \Model\Consulta();
+        $funcoes = new \Model\Funcoes();
 
         ?>
 
@@ -68,7 +68,7 @@
         </div>
     </div>
     <?php
-    $classpagamentos = new ClassPagamentos();
+    $classpagamentos = new \Model\Pagamentos();
     $ClassConsulta->relatorioAcadmia();
     ?>
 

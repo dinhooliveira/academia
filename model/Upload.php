@@ -1,17 +1,7 @@
 <?php
+namespace Model;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of ClassUpload
- *
- * @author oliveira
- */
-class ClassUpload {
+class Upload {
 
     private $arquivo;
     private $altura;

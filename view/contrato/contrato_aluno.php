@@ -18,7 +18,7 @@ and open the template in the editor.
         <?php
           if(isset($_GET['cod_contrato']))
           {   date_default_timezone_set('America/Sao_Paulo');
-              $classContrato = new ClassContrato();
+              $classContrato = new \Model\Contrato();
               $aluno = $classContrato->get_Aluno($_GET['cod_contrato']);
               $academia= $classContrato->Get_Academia($_GET['cod_contrato']);
               //var_dump($aluno);
@@ -68,7 +68,7 @@ and open the template in the editor.
     
     <?PHP 
     if(isset($_POST['aceitar']))
-    {   $ClassFuncoes = new ClassFuncoes();
+    {   $ClassFuncoes = new \Model\Funcoes();
        if(isset($_POST['aceito']))
         $classContrato->aceitarContrato($_GET['cod_contrato']);
        else

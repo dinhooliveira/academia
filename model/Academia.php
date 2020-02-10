@@ -1,12 +1,13 @@
 <?php
-
-class ClassAcademia extends ClassConfiguracao
+namespace Model;
+use \Model\Funcoes;
+class Academia extends \Model\Configuracao
 {
 
     function CadastrarAcademia($nome, $cep, $logradouro, $numero, $complemento, $bairro, $cidade, $uf)
     {
 
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         if ($nome == "") {
             $funcao->msg('error', 'Nome é Obrigatório');
         } else if (strlen($cep) != 8) {
@@ -32,7 +33,7 @@ class ClassAcademia extends ClassConfiguracao
 
     function ListarAcademia($pagina, $consulta,$urlParam)
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
 
         $porPagina = 5;
         $offset = (($pagina - 1) * $porPagina);
@@ -80,7 +81,7 @@ class ClassAcademia extends ClassConfiguracao
 
     function GetAcademia($id)
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         $SQL = "SELECT * FROM academia WHERE ID_ACADEMIA=" . $id . "";
 
         $result = $this->conexao->query($SQL);
@@ -92,7 +93,7 @@ class ClassAcademia extends ClassConfiguracao
 
     function retun_Academia()
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         $SQL = "SELECT * FROM academia ";
 
         $result = $this->conexao->query($SQL);
@@ -105,7 +106,7 @@ class ClassAcademia extends ClassConfiguracao
     function AtualizarAcademia($id, $nome, $cep, $logradouro, $numero, $complemento, $bairro, $cidade, $uf)
     {
 
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         if ($nome == "") {
             $funcao->msg('error', 'Nome é Obrigatório');
         } else if (strlen($cep) != 8) {
@@ -129,7 +130,7 @@ class ClassAcademia extends ClassConfiguracao
 
     function AtivarAcademia($id, $status)
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         if ($status == 0)
             $status = 1;
         else
@@ -143,7 +144,6 @@ class ClassAcademia extends ClassConfiguracao
         } else {
             $funcao->msg('error', 'Não foi possivel mudar status!' . $this->conexao->error);
             echo "<meta http-equiv='refresh' content='2'>";
-            //echo $SQL;
         }
     }
 

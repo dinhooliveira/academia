@@ -1,14 +1,17 @@
 <?php
+namespace Model;
+use \Model\Funcoes;
+use \Model\Upload;
 
-class ClassAluno extends ClassConfiguracao
+class Aluno extends \Model\Configuracao
 {
 
     function CadastrarAluno($nome, $nascimento, $cep, $logradouro, $numero, $complemento, $bairro, $cidade, $uf, $inscricao, $cpf, $rg, $email, $celular, $foto = null)
     {
 
-        $funcao = new ClassFuncoes();
-        $classUpload = new ClassUpload();
-        if ($foto != null) $foto = $classUpload->construtor($foto, 1000, 800, "public/upload/");
+        $funcao = new Funcoes();
+        $Upload = new Upload();
+        if ($foto != null) $foto = $Upload->construtor($foto, 1000, 800, "public/upload/");
 
         if ($nome == "") {
             $funcao->msg('error', 'Nome é Obrigatório');
@@ -42,9 +45,9 @@ class ClassAluno extends ClassConfiguracao
     function CadastrarDependente($nome, $nascimento, $inscricao, $responsavel, $foto = null)
     {
 
-        $funcao = new ClassFuncoes();
-        $classUpload = new ClassUpload();
-        if ($foto != null) $foto = $classUpload->construtor($foto, 1000, 800, "public/upload/");
+        $funcao = new Funcoes();
+        $Upload = new Upload();
+        if ($foto != null) $foto = $Upload->construtor($foto, 1000, 800, "public/upload/");
 
         if ($nome == "") {
             $funcao->msg('error', 'Nome é Obrigatório');
@@ -69,7 +72,7 @@ class ClassAluno extends ClassConfiguracao
 
     function ListarAluno($pagina, $consulta,$urlParam)
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
 
         $porPagina = 5;
         $offset = (($pagina - 1) * $porPagina);
@@ -139,7 +142,7 @@ class ClassAluno extends ClassConfiguracao
 
     function ListarDependente($pagina, $consulta, $id)
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
 
         $SQL = "SELECT * FROM dependente where(NOME LIKE '%" . $consulta . "%') AND id_aluno={$id}";
 
@@ -220,9 +223,9 @@ class ClassAluno extends ClassConfiguracao
     function AtualizarAluno($id, $nome, $nascimento, $cep, $logradouro, $numero, $complemento, $bairro, $cidade, $uf, $inscricao, $cpf, $rg, $email, $celular, $foto = null, $foto_antiga = null)
     {
 
-        $funcao = new ClassFuncoes();
-        $classUpload = new ClassUpload();
-        if ($foto != null) $foto = $classUpload->construtor($foto, 1000, 800, "public/upload/");
+        $funcao = new Funcoes();
+        $Upload = new Upload();
+        if ($foto != null) $foto = $Upload->construtor($foto, 1000, 800, "public/upload/");
 
         if ($nome == "") {
             $funcao->msg('error', 'Nome é Obrigatório');

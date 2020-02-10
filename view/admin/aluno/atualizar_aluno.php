@@ -1,5 +1,5 @@
 <?php
-$aluno = new ClassAluno();
+$aluno = new \Model\Aluno();
 if (isset($_GET['id'])) {
     $dados = $aluno->GetAluno($_GET['id']);
 } else {
@@ -175,8 +175,6 @@ if (isset($_GET['id'])) {
 
 
     <?php
-    $aluno = new ClassAluno();
-
     if (isset($_POST['cadastrar_aluno'])) {
         //echo $_FILES['foto']['name']="";
         if (!empty($_FILES['foto']['name']))

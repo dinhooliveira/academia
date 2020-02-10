@@ -1,13 +1,11 @@
 <?php
+namespace Model;
 
-/**
- * @author oliveira
- */
-class ClassLogin extends ClassConfiguracao {
+class Login extends \Model\Configuracao {
 
     function login($login, $senha) {
 
-        $funcao = new ClassFuncoes();
+        $funcao = new \Model\Funcoes();
 
         $login = addslashes($login);
         $SQL = "SELECT * FROM login WHERE cpf='" . $login . "' or email='" . $login . "'";
@@ -29,7 +27,7 @@ class ClassLogin extends ClassConfiguracao {
                 } else {
 
                     $this->session($dados['NOME']);
-                    $consulta = new ClassConsulta();
+                    $consulta = new \Model\Consulta();
 
                     echo"<script>location.href='?pagina=admin'</script>";
                 }

@@ -44,7 +44,7 @@
 
         <div class="row"> 
             <?php
-            $aluno = new ClassAluno();
+            $aluno = new \Model\Aluno();
 
             if (isset($_GET['p']) && is_numeric($_GET['p']))
                 $pagina = $_GET['p'];

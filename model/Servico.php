@@ -1,15 +1,15 @@
 <?php
+namespace Model;
 
-/**
- * @author oliveira
- */
-class ClassServico extends ClassConfiguracao
+use \Model\Funcoes;
+
+class Servico extends \Model\Configuracao
 {
 
     function GetServico($id)
     {
 
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         $SQL = "SELECT * FROM servico WHERE ID_SERVICO=" . $id;
 
         $result = $this->conexao->query($SQL);
@@ -23,7 +23,7 @@ class ClassServico extends ClassConfiguracao
     function returnServico()
     {
 
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         $SQL = "SELECT * FROM servico";
 
         if ($result = $this->conexao->query($SQL))
@@ -34,7 +34,7 @@ class ClassServico extends ClassConfiguracao
 
     function ListarServico($pagina = 1, $consulta = "", $urlParam)
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         $porPagina = 5;
         $offset = (($pagina - 1) * $porPagina);
         $limit = $porPagina;
@@ -84,7 +84,7 @@ class ClassServico extends ClassConfiguracao
 
     function AtivarServicos($id, $status)
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         if ($status == 0)
             $status = 1;
         else
@@ -104,7 +104,7 @@ class ClassServico extends ClassConfiguracao
 
     function getTipoServico($id)
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         $SQL = "SELECT * FROM servico WHERE ID_SERVICO=" . $id . "";
 
         $result = $this->conexao->query($SQL);
@@ -119,7 +119,7 @@ class ClassServico extends ClassConfiguracao
 
     function getValor($id)
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         $SQL = "SELECT * FROM servico WHERE ID_SERVICO=" . $id . "";
 
         $result = $this->conexao->query($SQL);
@@ -134,7 +134,7 @@ class ClassServico extends ClassConfiguracao
 
     function updateValor($id, $valor)
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         $SQL = "UPDATE servico set VALOR=" . $valor . " WHERE ID_SERVICO=" . $id . "";
 
         if ($this->conexao->query($SQL)) {

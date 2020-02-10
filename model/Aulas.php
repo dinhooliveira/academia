@@ -1,20 +1,11 @@
 <?php
+namespace Model;
+use \Model\Funcoes;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of ClassAulas
- *
- * @author oliveira
- */
-class ClassAulas extends ClassConfiguracao {
+class Aulas extends \Model\Configuracao {
 
     function insert_Aulas($cod, $seg, $ter, $qua, $qui, $sex, $sab, $horario) {
-        $ClassFuncao = new ClassFuncoes();
+        $ClassFuncao = new Funcoes();
         
         $SQL = "INSERT INTO aula(cod_contrato, seg, ter, qua, qui, sex, sab, horario) values ('" . $cod . "'," . $seg . "," . $ter . "," . $qua . "," . $qui . "," . $sex . "," . $sab . ",'" . $horario . "')";
         if ($this->conexao->query($SQL))
@@ -25,7 +16,7 @@ class ClassAulas extends ClassConfiguracao {
     }
 
     function update_Aulas($cod, $seg, $ter, $qua, $qui, $sex, $sab, $horario) {
-        $ClassFuncao = new ClassFuncoes();
+        $ClassFuncao = new Funcoes();
         $total = $this->return_Aulas($cod);
         if ($total == NULL) {
             $this->insert_Aulas($cod, $seg, $ter, $qua, $qui, $sex, $sab, $horario);
@@ -42,7 +33,7 @@ class ClassAulas extends ClassConfiguracao {
     }
 
     function return_Aulas($cod) {
-        $ClassFuncao = new ClassFuncoes();
+        $ClassFuncao = new Funcoes();
         $SQL = "SELECT * FROM aula WHERE cod_contrato='" . $cod . "'";
         if ($result = $this->conexao->query($SQL)) {
             return $result->fetch_assoc();

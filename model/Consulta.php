@@ -1,17 +1,15 @@
 <?php
 
-/**
- * Description of ClassConsulta
- *
- * @author oliveira
- */
-class ClassConsulta extends ClassConfiguracao
+namespace Model;
+use  Model\Funcoes;
+
+class Consulta extends \Model\Configuracao
 {
     /* retorna o valor total a receber com aluno mensal */
 
     function getValorAlunoMensal()
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         $SQL = "SELECT sum(servico.VALOR),aluno.ID_ALUNO,aluno.NOME FROM servico,contrato,aluno,academia WHERE (contrato.ID_ALUNO=aluno.ID_ALUNO AND contrato.ID_SERVICO=servico.ID_SERVICO AND contrato.ID_ACADEMIA=academia.ID_ACADEMIA) AND servico.TIPO='MENSAL' AND contrato.status=1 ";
         $result = $this->conexao->query($SQL);
 
@@ -29,7 +27,7 @@ class ClassConsulta extends ClassConfiguracao
 
     function getValorAlunoTrimestral()
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         $SQL = "SELECT sum(servico.VALOR),aluno.ID_ALUNO,aluno.NOME FROM servico,contrato,aluno,academia WHERE (contrato.ID_ALUNO=aluno.ID_ALUNO AND contrato.ID_SERVICO=servico.ID_SERVICO AND contrato.ID_ACADEMIA=academia.ID_ACADEMIA) AND servico.TIPO='TRIMESTRAL' AND contrato.status=1 ";
         $result = $this->conexao->query($SQL);
 
@@ -71,7 +69,7 @@ class ClassConsulta extends ClassConfiguracao
 
     function getValorMensalTotalReceber($cod)
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
 
         $SQL = "SELECT sum(servico.VALOR) FROM pagamentos LEFT JOIN contrato ON pagamentos.COD_CONTRATO = contrato.COD_CONTRATO LEFT JOIN aluno ON contrato.ID_ALUNO = aluno.ID_ALUNO LEFT JOIN servico ON contrato.ID_SERVICO = servico.ID_SERVICO WHERE contrato.COD_CONTRATO = '" . $cod . "' AND pagamentos.STATUS=0  ";
 
@@ -86,7 +84,7 @@ class ClassConsulta extends ClassConfiguracao
 
     function getQtdMensalAtraso($cod)
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
 
         $SQL = "SELECT * FROM pagamentos LEFT JOIN contrato ON pagamentos.COD_CONTRATO = contrato.COD_CONTRATO LEFT JOIN aluno ON contrato.ID_ALUNO = aluno.ID_ALUNO LEFT JOIN servico ON servico.ID_SERVICO=contrato.ID_SERVICO WHERE pagamentos.COD_CONTRATO = '" . $cod . "' AND pagamentos.STATUS=0 ";
 
@@ -122,7 +120,7 @@ class ClassConsulta extends ClassConfiguracao
 
     function relatorioPagamento($cod)
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         $SQL = "SELECT * FROM  contrato LEFT JOIN pagamentos ON contrato.COD_CONTRATO=pagamentos.COD_CONTRATO LEFT JOIN servico ON servico.ID_SERVICO=pagamentos.ID_SERVICO WHERE contrato.COD_CONTRATO= '" . $cod . "' ORDER BY pagamentos.ID_PAGAMENTO DESC";
         $result = $this->conexao->query($SQL);
 
@@ -298,7 +296,7 @@ class ClassConsulta extends ClassConfiguracao
 
     function relatorioAcadmia($dataI = '0000-00-00', $dataF = '0000-00-00', $academia = '')
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         if ($dataF == '0000-00-00')
             $dataF = Date('Y-m-d');
         $SQL = "SELECT 
@@ -321,7 +319,7 @@ class ClassConsulta extends ClassConfiguracao
 
     function get_relatorio_Acadmia_soma_mensal($dataI = '0000-00-00', $dataF = '0000-00-00', $academia = '')
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         if ($dataF == '0000-00-00')
             $dataF = Date('Y-m-d');
         $SQL = "SELECT sum(pagamentos.valor) FROM  contrato LEFT JOIN pagamentos ON contrato.COD_CONTRATO=pagamentos.COD_CONTRATO LEFT JOIN servico ON servico.ID_SERVICO=pagamentos.ID_SERVICO LEFT JOIN academia ON contrato.ID_ACADEMIA=academia.ID_ACADEMIA WHERE academia.NOME LIKE  '%" . $academia . "%' AND pagamentos.DATA_PAG  BETWEEN '" . $dataI . "' AND '" . $dataF . "' AND servico.TIPO='MENSAL' ORDER BY pagamentos.ID_PAGAMENTO DESC";
@@ -336,7 +334,7 @@ class ClassConsulta extends ClassConfiguracao
 
     function get_relatorio_Acadmia_soma_trimestral($dataI = '0000-00-00', $dataF = '0000-00-00', $academia = '')
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         if ($dataF == '0000-00-00')
             $dataF = Date('Y-m-d');
         $SQL = "SELECT sum(pagamentos.valor) FROM  contrato LEFT JOIN pagamentos ON contrato.COD_CONTRATO=pagamentos.COD_CONTRATO LEFT JOIN servico ON servico.ID_SERVICO=pagamentos.ID_SERVICO LEFT JOIN academia ON contrato.ID_ACADEMIA=academia.ID_ACADEMIA WHERE academia.NOME LIKE  '%" . $academia . "%' AND pagamentos.DATA_PAG  BETWEEN '" . $dataI . "' AND '" . $dataF . "' AND servico.TIPO='TRIMESTRAL' ORDER BY pagamentos.ID_PAGAMENTO DESC";
@@ -351,7 +349,7 @@ class ClassConsulta extends ClassConfiguracao
 
     function get_relatorio_Acadmia_soma_total($dataI = '0000-00-00', $dataF = '0000-00-00', $academia = '')
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         if ($dataF == '0000-00-00')
             $dataF = Date('Y-m-d');
         $SQL = "SELECT sum(pagamentos.valor) FROM  contrato LEFT JOIN pagamentos ON contrato.COD_CONTRATO=pagamentos.COD_CONTRATO LEFT JOIN servico ON servico.ID_SERVICO=pagamentos.ID_SERVICO LEFT JOIN academia ON contrato.ID_ACADEMIA=academia.ID_ACADEMIA WHERE academia.NOME LIKE  '%" . $academia . "%' AND pagamentos.DATA_PAG  BETWEEN '" . $dataI . "' AND '" . $dataF . "' ORDER BY pagamentos.ID_PAGAMENTO DESC";
@@ -366,7 +364,7 @@ class ClassConsulta extends ClassConfiguracao
 
     function consultaAlunos($horario = "", $semana = "", $academia = "", $servico = "")
     {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
 
         $queryAux = !empty($semana) ? " AND  aula." . $semana . "=1" : "";
 

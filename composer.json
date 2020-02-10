@@ -1,0 +1,16 @@
+{
+    "name": "oliveira/academia",
+    "description": "sistema de academia",
+    "authors": [
+        {
+            "name": "Adereldo Oliveira",
+            "email": "oliveiracienciacomputacao@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Model\\":"model/"
+        }
+    }
+}

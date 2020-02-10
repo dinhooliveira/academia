@@ -1,16 +1,14 @@
-
-
-
-
- 
-
 <?php
 
-error_reporting(0);
+require './vendor/autoload.php';
+use Model\Rota;
+$confs =  parse_ini_file('.env', true);
 
-include_once('model/autoload.php'); 
+foreach($confs as $key => $conf){
+    putenv("{$key}={$conf}");
+}
 
-$rota = new ClassRota();
+$rota = new Rota();
 $rota->Paginacao();
 
 

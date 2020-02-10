@@ -1,14 +1,15 @@
 <?php
-/**
- * @author oliveira
- */
-class ClassPagamentos extends ClassConfiguracao {
+namespace Model;
+use \Model\Funcoes;
+use Model\Servico;
+
+class Pagamentos extends \Model\Configuracao {
 
     //lança as datas de pagamentos mensais na tabela
     //lanca o primeiro pagamento com a data do contrato
     function gerarPagamento($contrato, $data, $data_vencimento, $tipo, $servico, $status) {
-        $funcao = new ClassFuncoes();
-        $classServico = new ClassServico();
+        $funcao = new Funcoes();
+        $Servico = new Servico();
         //inserem o codigo e data de pagamento na tabela pagamento e como padrao atribui 0 como não pago
         if ($tipo == "MENSAL") {
             $data_vencimento = $this->Data($data_vencimento);
@@ -17,7 +18,7 @@ class ClassPagamentos extends ClassConfiguracao {
             $data_vencimento = $this->DataTrimestral($data_vencimento);
         }
 
-        $valor = $classServico->getValor($servico);
+        $valor = $Servico->getValor($servico);
 
         $SQL = "INSERT INTO pagamentos (COD_CONTRATO,DATA_PAG,STATUS,DATA_VENC,ID_SERVICO,VALOR) VALUES ('" . $contrato . "','" . $data . "'," . $status . ",'" . $data_vencimento . "'," . $servico . "," . $valor . ")";
 
@@ -30,8 +31,8 @@ class ClassPagamentos extends ClassConfiguracao {
     }
 
     function gerarPagamentoAtual($contrato, $dia_venc, $data_vencimento, $tipo, $servico, $status) {
-        $funcao = new ClassFuncoes();
-        $classServico = new ClassServico();
+        $funcao = new Funcoes();
+        $Servico = new Servico();
         //inserem o codigo e data de pagamento na tabela pagamento e como padrao atribui 0 como não pago
         if ($tipo == "MENSAL") {
             $data_vencimento = $this->DataPrazo($dia_venc, $data_vencimento);
@@ -40,7 +41,7 @@ class ClassPagamentos extends ClassConfiguracao {
             $data_vencimento = $this->DataTrimestralPrazo($dia_venc, $data_vencimento);
         }
 
-        $valor = $classServico->getValor($servico);
+        $valor = $Servico->getValor($servico);
 
         $SQL = "INSERT INTO pagamentos (COD_CONTRATO,DATA_PAG,STATUS,DATA_VENC,ID_SERVICO,VALOR) VALUES ('" . $contrato . "','" . Date('Y-m-d') . "'," . $status . ",'" . $data_vencimento . "'," . $servico . "," . $valor . ")";
 
@@ -53,11 +54,11 @@ class ClassPagamentos extends ClassConfiguracao {
     }
 
     function pagar($contrato, $academia, $servico, $dia_venc) {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         $classContrato = new ClassContrato();
 
-        $classServico = new ClassServico();
-        $tipo = $classServico->getTipoServico($servico);
+        $Servico = new Servico();
+        $tipo = $Servico->getTipoServico($servico);
 
         $data_vencimento = $this->getMensalUltimoPagamento($contrato);
 
@@ -78,7 +79,7 @@ class ClassPagamentos extends ClassConfiguracao {
 
     //verifica se o ultimo pagamento foi pago se sim retorna true
     function verificaUltimoPagamento($cod) {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
 
         $SQL = "SELECT pagamentos.DATA_VENC  FROM pagamentos LEFT JOIN contrato ON pagamentos.COD_CONTRATO = contrato.COD_CONTRATO LEFT JOIN aluno ON contrato.ID_ALUNO = aluno.ID_ALUNO LEFT JOIN servico ON servico.ID_SERVICO=contrato.ID_SERVICO WHERE pagamentos.COD_CONTRATO = '" . $cod . "'  ORDER BY pagamentos.DATA_PAG DESC ";
 
@@ -101,7 +102,7 @@ class ClassPagamentos extends ClassConfiguracao {
     }
 
     function getMensalUltimoPagamento($cod) {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
 
         $SQL = "SELECT pagamentos.DATA_VENC  FROM pagamentos LEFT JOIN contrato ON pagamentos.COD_CONTRATO = contrato.COD_CONTRATO LEFT JOIN aluno ON contrato.ID_ALUNO = aluno.ID_ALUNO LEFT JOIN servico ON servico.ID_SERVICO=contrato.ID_SERVICO WHERE pagamentos.COD_CONTRATO = '" . $cod . "'  ORDER BY pagamentos.DATA_VENC DESC ";
 
@@ -118,19 +119,19 @@ class ClassPagamentos extends ClassConfiguracao {
     }
 
     function deletarPagamento($id) {
-        $classFuncoes = new ClassFuncoes();
+        $Funcoes = new Funcoes();
         $SQL = "DELETE FROM pagamentos WHERE ID_PAGAMENTO=" . $id . "";
 
         if ($this->conexao->query($SQL)) {
-            $classFuncoes->msg('OK', 'Exluido com sucesso!');
+            $Funcoes->msg('OK', 'Exluido com sucesso!');
         } else {
-            $classFuncoes->msg('error', 'Não foi possivel efetuar a exclusão' . $this->conexao->error);
+            $Funcoes->msg('error', 'Não foi possivel efetuar a exclusão' . $this->conexao->error);
         }
     }
 
     //lança as datas de pagamentos trimestrais na tabela
     function gerarPagamentoALunoTrimestral() {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         /* seleciona os dados dos alunos trimestrais ativos */
         $SQL = "SELECT * FROM servico,contrato,aluno,academia WHERE (contrato.ID_ALUNO=aluno.ID_ALUNO AND contrato.ID_SERVICO=servico.ID_SERVICO AND contrato.ID_ACADEMIA=academia.ID_ACADEMIA) AND servico.TIPO='TRIMESTRAL' AND contrato.status=1";
 
@@ -187,7 +188,7 @@ class ClassPagamentos extends ClassConfiguracao {
     }
 
     function gerarPagamentoALunoMensal() {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         /* seleciona os dados dos alunos mensais ativos */
         $SQL = "SELECT * FROM pagamentos LEFT JOIN contrato ON pagamentos.COD_CONTRATO = contrato.COD_CONTRATO LEFT JOIN aluno ON contrato.ID_ALUNO = aluno.ID_ALUNO LEFT JOIN servico ON contrato.ID_SERVICO = servico.ID_SERVICO WHERE contrato.COD_CONTRATO = '" . $cod . "' AND pagamentos.STATUS=0 AND pagamentos.TIPO='MENSAL'";
 
@@ -236,7 +237,7 @@ class ClassPagamentos extends ClassConfiguracao {
     }
 
     function gerarPagamentoTodosALunoMensal() {
-        $funcao = new ClassFuncoes();
+        $funcao = new Funcoes();
         /* seleciona os dados dos alunos mensais ativos */
         $SQL = "SELECT * FROM servico,contrato,aluno,academia WHERE (contrato.ID_ALUNO=aluno.ID_ALUNO AND contrato.ID_SERVICO=servico.ID_SERVICO AND contrato.ID_ACADEMIA=academia.ID_ACADEMIA) AND servico.TIPO='MENSAL' AND contrato.status=1";
 
@@ -338,7 +339,7 @@ class ClassPagamentos extends ClassConfiguracao {
 
     function alterar_vencimento_e_pagamento($id_pagamento, $pagamento, $vencimento) {
 
-        $ClassFuncao = new ClassFuncoes();
+        $ClassFuncao = new Funcoes();
         if ($pagamento == "" || $pagamento == "0000-00-00") {
             $ClassFuncao->msg('error', 'Verifique o preenchimento do pagamento');
         } else

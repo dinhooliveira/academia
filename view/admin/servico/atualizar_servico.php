@@ -1,5 +1,5 @@
        <?php
-             $servico = new ClassServico();
+             $servico = new \Model\Servico();
              if(isset($_GET['id']))
              {
                  $dados = $servico->GetServico($_GET['id']); 
@@ -37,9 +37,8 @@
                     <div class="row"> 
                                  <?php
             
-             $ClassServico = new ClassServico();
              if(isset($_POST['ataulizar_valor']))
-             $ClassServico->updateValor($_GET['id'],$_POST['valor']);
+             $servico->updateValor($_GET['id'],$_POST['valor']);
              
              
             ?>

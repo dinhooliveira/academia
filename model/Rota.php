@@ -1,12 +1,13 @@
 <?php
+namespace Model;
 
-class ClassRota
+class Rota
 {
 
     public function Paginacao()
     {
 
-        $login = new ClassLogin();
+        $login = new \Model\Login();
 
         if (isset($_GET["pagina"])) {
             $pagina = $_GET["pagina"]; //se existir um url pagina o valor sera recebido

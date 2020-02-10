@@ -154,7 +154,7 @@
 
 
     <?php
-    $aluno = new ClassAluno();
+    $aluno = new \Model\Aluno();
     if (isset($_POST["cadastrar_aluno"])){
         
        //echo $_FILES['foto']['name']="";

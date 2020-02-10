@@ -47,7 +47,7 @@
 
         <div class="row">
             <?php
-            $contrato = new ClassContrato();
+            $contrato = new \Model\Contrato();
 
             if (isset($_GET['p']))
                 $pagina = $_GET['p'];
@@ -68,7 +68,7 @@
 
 
             if (isset($_POST['reeviar_contrato'])) {
-                $email = new ClassEmail();
+                $email = new \Model\Email();
                 $email->emailContrato($_POST['reeviar_contrato']);
             }
 

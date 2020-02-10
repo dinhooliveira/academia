@@ -17,8 +17,8 @@
         <!-- /.row -->
         <?php
 
-        $ClassConsulta = new ClassConsulta();
-        $classAcademia = new ClassAcademia();
+        $ClassConsulta = new \Model\Consulta();
+        $classAcademia = new \Model\Academia();
 
 
         ?>

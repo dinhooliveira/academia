@@ -1,14 +1,11 @@
 <?php
-/**
- * Description of ClassEmail
- *
- * @author oliveira
- */
-class ClassEmail {
+namespace Model;
+
+class Email {
 
     function emailContrato($contrato) {
 
-        $ClassContrato = new ClassContrato();
+        $ClassContrato = new \Model\Contrato();
         $email = $ClassContrato->get_Aluno($contrato);
 
         $dominio = $_SERVER['SERVER_NAME'];
