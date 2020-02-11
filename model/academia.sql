@@ -146,7 +146,7 @@ CREATE TABLE `login` (
 --
 
 INSERT INTO `login` (`ID`, `CPF`, `NOME`, `EMAIL`, `SENHA`) VALUES
-(1, '14416962703', 'Andre Felipe da Silva Feitosa', 'admin@gmail.com', 'admin123');
+(1, '11111111111', 'administrador', 'admin@gmail.com', 'admin123');
 
 -- --------------------------------------------------------
 
