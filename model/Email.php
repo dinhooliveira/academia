@@ -21,16 +21,9 @@ class Email {
         // Always set content-type when sending HTML email
         $headers = "MIME-Version: 1.0" . "\r\n";
         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-
+        $fromEmail = getenv('fromEmail');
         // More headers
-        $headers .= 'From: <oliveiracienciacomputacao@gmail.com>' . "\r\n";
-        $headers .= 'Cc: backup@publisherdigital.com.br' . "\r\n";
-
-
-
-        $f = "-f";
-        $returnpath = "oliveira@publisherdigital.com.br";
-
+        $headers .= "From: <{$fromEmail}>" . "\r\n";
         $result = mail($to, $subject, $msg, $headers);
 
 
